@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Company Registration - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="bg-white-card shadow-lg p-5">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold text-warning mb-3" style="color: #d39e00 !important;">Company Registration</h2>
+                    <p class="text-muted">Register your organization to start hiring from our talented student pool.</p>
+                </div>
+
+                <form action="{{ url_for('register_company') }}" method="POST">
+                    <div class="row">
+                        <!-- Account Details Column -->
+                        <div class="col-md-6 border-end pe-md-4">
+                            <h5 class="fw-bold mb-4 border-bottom pb-2 text-primary">Account Details</h5>
+                            <div class="mb-3">
+                                <label for="username" class="form-label fw-bold small">Admin Username</label>
+                                <input type="text" class="form-control" id="username" name="username"
+                                    placeholder="Company admin username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label fw-bold small">Official Email</label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                    placeholder="hr@company.com" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label fw-bold small">Password</label>
+                                <input type="password" class="form-control" id="password" name="password"
+                                    placeholder="••••••••" required>
+                            </div>
+                        </div>
+
+                        <!-- Organization Profile Column -->
+                        <div class="col-md-6 ps-md-4">
+                            <h5 class="fw-bold mb-4 border-bottom pb-2 text-primary">Organization Profile</h5>
+                            <div class="mb-3">
+                                <label for="name" class="form-label fw-bold small">Company Name</label>
+                                <input type="text" class="form-control" id="name" name="name"
+                                    placeholder="Google / Microsoft / Startup Ltd." required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="hr_contact" class="form-label fw-bold small">HR Contact Number</label>
+                                <input type="text" class="form-control" id="hr_contact" name="hr_contact"
+                                    placeholder="+91 9876543210" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="website" class="form-label fw-bold small">Company Website</label>
+                                <input type="url" class="form-control" id="website" name="website"
+                                    placeholder="https://company.com">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="mb-4">
+                                <label for="description" class="form-label fw-bold small">About the Company</label>
+                                <textarea class="form-control" id="description" name="description" rows="3"
+                                    placeholder="Briefly describe what your organization does..."></textarea>
+                            </div>
+                            <button type="submit"
+                                class="btn btn-warning btn-lg-custom w-100 py-3 shadow-sm text-dark fw-bold">Register
+                                Organization</button>
+                            <p class="text-center text-muted small mt-3">All company profiles require manual approval
+                                from our administration team.</p>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="mt-5 text-center border-top pt-4">
+                    <p class="small text-muted mb-0">Already registered?
+                        <a href="{{ url_for('login') }}" class="text-primary fw-bold text-decoration-none">Sign in
+                            here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

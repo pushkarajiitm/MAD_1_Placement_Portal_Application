@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="login-box shadow-lg">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold text-primary mb-3">Welcome Back</h2>
+                    <p class="text-muted">Enter your credentials below to access the placement dashboard.</p>
+                </div>
+
+                <form action="{{ url_for('login') }}" method="POST">
+                    <div class="mb-4">
+                        <label for="username" class="form-label fw-bold small">Username</label>
+                        <input type="text" class="form-control form-control-lg border-2" id="username" name="username"
+                            placeholder="Enter your username" required>
+                    </div>
+                    <div class="mb-5">
+                        <label for="password" class="form-label fw-bold small">Password</label>
+                        <input type="password" class="form-control form-control-lg border-2" id="password"
+                            name="password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg-custom w-100 py-3 shadow-sm">Sign In to
+                        Account</button>
+                </form>
+
+                <div class="mt-5 text-center border-top pt-4">
+                    <p class="small text-muted mb-0">Having trouble logging in? <br>
+                        <a href="#" class="text-primary fw-bold text-decoration-none">Contact Support Team</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

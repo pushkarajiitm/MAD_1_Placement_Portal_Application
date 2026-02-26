@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Placement Portal{% endblock %}
+
+{% block content %}
+<!-- Full Width Hero Section -->
+<section class="jumbotron-custom">
+    <div class="container">
+        <h1 class="display-3">Empowering Careers.</h1>
+        <p class="lead">The official Institute Placement Portal. We connect bright minds with industry leaders through a
+            streamlined recruitment process that works for everyone.</p>
+        <div class="mt-5">
+            <a href="{{ url_for('register_student') }}" class="btn btn-light btn-lg-custom shadow-sm me-3">Explore
+                Jobs</a>
+            <a href="{{ url_for('register_company') }}" class="btn btn-outline-light btn-lg-custom">Host a Drive</a>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="section-title">Getting Started</h2>
+        </div>
+    </div>
+
+    <!-- Registration Grid -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="card card-student h-100 p-4">
+                <div class="card-body">
+                    <div class="feature-icon text-success">
+                        <i class="bi bi-mortarboard-fill"></i> <!-- Placeholder for icon -->
+                    </div>
+                    <h3 class="fw-bold mb-3">For Students</h3>
+                    <p class="text-muted mb-4">Jumpstart your career by creating a comprehensive profile. Access
+                        exclusive placement drives from top-tier companies, manage your digital resume, and track all
+                        your applications from a single dashboard.</p>
+                    <a href="{{ url_for('register_student') }}" class="btn btn-success w-100 fw-bold">Register as
+                        Student</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card card-company h-100 p-4">
+                <div class="card-body">
+                    <div class="feature-icon text-warning">
+                        <i class="bi bi-building-fill"></i> <!-- Placeholder for icon -->
+                    </div>
+                    <h3 class="fw-bold mb-3">For Companies</h3>
+                    <p class="text-muted mb-4">Find the perfect talent for your team. Join our network to post new
+                        recruitment drives, host virtual or physical interviews, shortlist the best candidates, and
+                        manage the entire hiring process with ease.</p>
+                    <a href="{{ url_for('register_company') }}" class="btn btn-warning w-100 fw-bold">Post a Recruitment
+                        Drive</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Why Choose Us Grid -->
+    <div class="row text-center mt-5 pt-5 pb-5">
+        <div class="col-12 mb-5">
+            <h2 class="section-title">Why Use Our Portal?</h2>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="bg-white-card h-100">
+                <h4 class="fw-bold text-primary">Easy Tracking</h4>
+                <p class="text-muted mb-0">Never miss an update. Track every stage of your application, from
+                    shortlisting to final selection, in real-time.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="bg-white-card h-100">
+                <h4 class="fw-bold text-primary">Verified Talent</h4>
+                <p class="text-muted mb-0">Companies get access to verified student profiles, ensuring they find the
+                    highest quality candidates for their roles.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="bg-white-card h-100">
+                <h4 class="fw-bold text-primary">Streamlined Process</h4>
+                <p class="text-muted mb-0">From posting a drive to the final offer letter, everything is managed
+                    digitally to save time and reduce paperwork.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Call to Action -->
+    <div class="row mt-5 mb-5 pt-5 border-top">
+        <div class="col-lg-8 mx-auto text-center">
+            <h3 class="fw-bold mb-4">Ready to get started? Join us today.</h3>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{{ url_for('login') }}" class="btn btn-primary px-5 py-3 fw-bold">Login to Portal</a>
+                <a href="#" class="btn btn-outline-dark px-5 py-3 fw-bold">Contact Administrator</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
