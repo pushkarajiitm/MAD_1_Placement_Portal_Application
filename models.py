@@ -42,6 +42,14 @@ class Student(db.Model):
     cgpa = db.Column(db.Float)
     is_blacklisted = db.Column(db.Boolean, default=False)
 
+    # Placement details
+    placement_status = db.Column(db.String(20), default='Unplaced') # Placed, Unplaced
+    package = db.Column(db.Float, nullable=True) # LPA
+    placed_company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=True)
+
+    # Link to placed company object
+    placed_company = db.relationship('Company', foreign_keys=[placed_company_id])
+
     # link to student's applications
     applications = db.relationship('Application', backref='student', lazy=True)
 

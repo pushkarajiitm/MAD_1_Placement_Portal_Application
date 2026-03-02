@@ -5,8 +5,9 @@ import os
 from werkzeug.utils import secure_filename
 from functools import wraps
 
-# Import the admin blueprint
+# Import the blueprints
 from admin import admin_bp
+from company import company_bp
 
 app = Flask(__name__)
 
@@ -27,8 +28,9 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# Register the admin blueprint routes with the main application
+# Register the blueprint routes with the main application
 app.register_blueprint(admin_bp)
+app.register_blueprint(company_bp)
 
 # Define how Flask-Login loads a user object from the session user_id
 @login_manager.user_loader
@@ -72,6 +74,9 @@ def login():
             # Redirect the user based on their specific role in the system
             if user_record.role == 'admin':
                 return redirect(url_for('admin.admin_dashboard'))
+            elif user_record.role == 'company':
+                return redirect(url_for('company.company_dashboard'))
+            # Default fallback for student
             return redirect(url_for('index'))
         else:
             flash('Invalid username or password', 'danger')
@@ -165,7 +170,7 @@ def register_company():
         return redirect(url_for('login'))
 
     # Render the empty company registration form for GET requests
-    return render_template('register_company.html')
+    return render_template('company/register_company.html')
 
 # Route: Logout
 @app.route('/logout')
@@ -176,5 +181,5 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    # Start the Flask application development server
-    app.run(debug=True)
+    # Start the Flask application development server on port 5001
+    app.run(debug=True, port=5001)

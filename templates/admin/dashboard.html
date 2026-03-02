@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Admin Dashboard</h2>
+
+    <div class="row">
+        <!-- Statistics Cards -->
+        <div class="col-md-3 mb-4">
+            <div class="card bg-primary text-white shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Companies</h5>
+                    <p class="card-text display-4">{{ pending_companies }}</p>
+                    <a href="{{ url_for('admin.admin_companies', search='') }}"
+                        class="btn btn-outline-light btn-sm">Manage Companies</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card bg-success text-white shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Drives</h5>
+                    <p class="card-text display-4">{{ pending_drives }}</p>
+                    <a href="{{ url_for('admin.admin_drives', search='') }}" class="btn btn-outline-light btn-sm">Manage
+                        Drives</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card bg-info text-white shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Total Students</h5>
+                    <p class="card-text display-4">{{ total_students }}</p>
+                    <a href="{{ url_for('admin.admin_students', search='') }}" class="btn btn-outline-light btn-sm">View
+                        Students</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card bg-warning text-dark shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Total Placed</h5>
+                    <p class="card-text display-4">{{ total_placed }}</p>
+                    <a href="{{ url_for('admin.placed_students') }}" class="btn btn-outline-dark btn-sm">Placed
+                        Students</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Links / Actions Area -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Administrative Overview</h5>
+                </div>
+                <div class="card-body">
+                    <p>Welcome, Admin. Here you can oversee the recruitment activities, manage user accounts, and
+                        approve corporate requests.</p>
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('admin.admin_companies') }}" class="btn btn-primary">Companies List</a>
+                        <a href="{{ url_for('admin.admin_students') }}" class="btn btn-secondary">Students List</a>
+                        <a href="{{ url_for('admin.admin_drives') }}" class="btn btn-success">Drives List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

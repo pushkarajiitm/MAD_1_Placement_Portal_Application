@@ -126,10 +126,3 @@ body {
     border-radius: 20px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
-
-footer {
-    background: #343a40;
-    color: #ccc;
-    padding: 50px 0;
-    margin-top: 80px;
-}

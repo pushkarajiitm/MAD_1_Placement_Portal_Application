@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Company Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 text-center text-lg-start mb-4">
+        <h2 class="fw-bold mb-1">Company Dashboard</h2>
+        <p class="text-muted">Welcome back, {{ current_user.company_profile.name }}</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Statistic 1: Total Drives Created -->
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 p-3">
+            <div class="card-body text-center">
+                <h6 class="text-muted fw-bold mb-2">My Placement Drives</h6>
+                <h1 class="display-5 fw-bold text-primary mb-0">{{ my_drives_count }}</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistic 2: Total Applications Received -->
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 p-3">
+            <div class="card-body text-center">
+                <h6 class="text-muted fw-bold mb-2">Total Applications</h6>
+                <h1 class="display-5 fw-bold text-success mb-0">{{ total_applications }}</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistic 3: Total Shortlisted Students -->
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 p-3">
+            <div class="card-body text-center">
+                <h6 class="text-muted fw-bold mb-2">Shortlisted Students</h6>
+                <h1 class="display-5 fw-bold text-warning mb-0">{{ shortlisted_count }}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12 text-center">
+        <!-- Quick action button to manage drives -->
+        <a href="{{ url_for('company.company_drives') }}"
+            class="btn btn-primary px-5 py-3 fw-bold rounded-pill shadow-sm">
+            Manage Drives & View Applications
+        </a>
+    </div>
+</div>
+{% endblock %}

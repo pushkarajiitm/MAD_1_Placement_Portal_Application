@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Placement Drives{% endblock %}
+
+{% block content %}
+<div class="row mb-4 align-items-center">
+    <div class="col-md-6 mb-3 mb-md-0 pt-2 text-center text-md-start">
+        <h2 class="fw-bold mb-0">My Placement Drives</h2>
+    </div>
+    <div class="col-md-6 text-center text-md-end">
+        <!-- Button to trigger the Create Drive Modal -->
+        <button type="button" class="btn btn-primary px-4 fw-bold shadow-sm" data-bs-toggle="modal"
+            data-bs-target="#createDriveModal">
+            + Post New Drive
+        </button>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">Job Title</th>
+                        <th>Status</th>
+                        <th>Deadline</th>
+                        <th class="pe-4 text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for drive in drives %}
+                    <tr>
+                        <td class="ps-4 fw-bold">{{ drive.job_title }}</td>
+                        <td>
+                            <!-- Visual status badge for the drive -->
+                            {% if drive.status == 'Approved' %}
+                            <span
+                                class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">Active</span>
+                            {% elif drive.status == 'Rejected' %}
+                            <span
+                                class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">Rejected</span>
+                            {% else %}
+                            <span
+                                class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-2 rounded-pill">Pending
+                                Admin</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ drive.application_deadline.strftime('%Y-%m-%d') }}</td>
+                        <td class="pe-4 text-end">
+                            <!-- Only allow viewing applications if the drive is approved by admin -->
+                            {% if drive.status == 'Approved' %}
+                            <a href="{{ url_for('company.view_applications', drive_id=drive.id) }}"
+                                class="btn btn-sm btn-outline-primary fw-bold px-3">View Applications</a>
+                            {% else %}
+                            <button class="btn btn-sm btn-outline-secondary px-3" disabled>Waiting for Approval</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted">You haven't posted any drives yet. Click the
+                            button above to start!</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for creating a new placement drive -->
+<div class="modal fade" id="createDriveModal" tabindex="-1" aria-labelledby="createDriveModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bold" id="createDriveModalLabel">Post a New Job Drive</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-3">
+                <form action="{{ url_for('company.company_drives') }}" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label text-muted fw-bold small mb-1">Job Title</label>
+                        <input type="text" class="form-control" name="job_title" required
+                            placeholder="e.g. Software Engineer">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted fw-bold small mb-1">Job Description</label>
+                        <textarea class="form-control" name="job_description" rows="3" required
+                            placeholder="Describe the role..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted fw-bold small mb-1">Eligibility Criteria</label>
+                        <textarea class="form-control" name="eligibility_criteria" rows="2" required
+                            placeholder="e.g. B.Tech CS, 7+ CGPA"></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label text-muted fw-bold small mb-1">Application Deadline</label>
+                        <input type="date" class="form-control" name="application_deadline" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 fw-bold py-2">Submit for Approval</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
