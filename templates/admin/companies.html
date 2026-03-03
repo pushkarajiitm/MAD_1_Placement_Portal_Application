@@ -28,8 +28,20 @@
                 <tr>
                     <td>{{ company.id }}</td>
                     <td>
-                        <strong>{{ company.name }}</strong><br>
-                        <small class="text-muted">{{ company.website }}</small>
+                        <div class="d-flex align-items-center">
+                            {% if company.logo_path %}
+                            <img src="{{ url_for('static', filename=company.logo_path) }}" alt="{{ company.name }} logo"
+                                class="rounded-circle me-3 shadow-sm border"
+                                style="width: 40px; height: 40px; object-fit: cover;">
+                            {% else %}
+                            <div class="rounded-circle me-3 bg-light border d-flex align-items-center justify-content-center text-muted shadow-sm"
+                                style="width: 40px; height: 40px; font-size: 12px;">No Logo</div>
+                            {% endif %}
+                            <div>
+                                <strong>{{ company.name }}</strong><br>
+                                <small class="text-muted text-break">{{ company.website }}</small>
+                            </div>
+                        </div>
                     </td>
                     <td>{{ company.hr_contact }}</td>
                     <td>

@@ -66,9 +66,8 @@
                                     <li><a class="dropdown-item text-primary fw-bold"
                                             href="{{ url_for('company.update_application_status', app_id=app.id, new_status='Shortlisted') }}">Mark
                                             Shortlisted</a></li>
-                                    <li><a class="dropdown-item text-success fw-bold"
-                                            href="{{ url_for('company.update_application_status', app_id=app.id, new_status='Selected') }}">Mark
-                                            Selected</a></li>
+                                    <li><a class="dropdown-item text-success fw-bold" href="#" data-bs-toggle="modal"
+                                            data-bs-target="#selectRoleModal{{ app.id }}">Mark Selected</a></li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
@@ -76,6 +75,41 @@
                                             href="{{ url_for('company.update_application_status', app_id=app.id, new_status='Rejected') }}">Reject</a>
                                     </li>
                                 </ul>
+                            </div>
+
+                            <!-- Modal for Role Selection on Hire -->
+                            <div class="modal fade" id="selectRoleModal{{ app.id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-sm">
+                                    <div class="modal-content border-0 shadow">
+                                        <div class="modal-header border-bottom-0 pb-0">
+                                            <h6 class="modal-title fw-bold">Select Role for {{ app.student.full_name }}
+                                            </h6>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body pt-3 text-start">
+                                            <form
+                                                action="{{ url_for('company.update_application_status', app_id=app.id, new_status='Selected') }}"
+                                                method="POST">
+                                                <div class="mb-3">
+                                                    <label class="form-label small fw-bold text-muted mb-1">Offered
+                                                        Role</label>
+                                                    <select class="form-select form-select-sm" name="selected_job_id"
+                                                        required>
+                                                        <option value="" selected disabled>Choose a role...</option>
+                                                        {% for job in drive.offered_jobs %}
+                                                        <option value="{{ job.id }}">{{ job.role_title }} ({{
+                                                            job.package }} LPA)</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <button type="submit"
+                                                    class="btn btn-sm btn-success w-100 fw-bold">Confirm
+                                                    Selection</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </td>
                     </tr>

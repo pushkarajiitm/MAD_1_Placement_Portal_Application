@@ -25,6 +25,7 @@ class Company(db.Model):
     hr_contact = db.Column(db.String(20), nullable=False)
     website = db.Column(db.String(100))
     description = db.Column(db.Text)
+    logo_path = db.Column(db.String(255), nullable=True) # Path to company logo
     approval_status = db.Column(db.String(20), default='Pending') # Statuses: Pending, Approved, Rejected
     is_blacklisted = db.Column(db.Boolean, default=False)
 
@@ -45,6 +46,7 @@ class Student(db.Model):
     # Placement details
     placement_status = db.Column(db.String(20), default='Unplaced') # Placed, Unplaced
     package = db.Column(db.Float, nullable=True) # LPA
+    placed_role = db.Column(db.String(100), nullable=True) # Specific job role
     placed_company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=True)
 
     # Link to placed company object
@@ -65,14 +67,35 @@ class PlacementDrive(db.Model):
 
     # link to drive applications
     applications = db.relationship('Application', backref='drive', lazy=True)
+    
+    # link to specific jobs offered by this drive
+    offered_jobs = db.relationship('DriveJob', backref='drive', lazy=True, cascade="all, delete-orphan")
+
+# Specific jobs/roles within a placement drive
+class DriveJob(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    drive_id = db.Column(db.Integer, db.ForeignKey('placement_drive.id'), nullable=False)
+    role_title = db.Column(db.String(100), nullable=False)
+    package = db.Column(db.Float, nullable=False) # LPA
 
 # Application table (student applying for a drive)
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
     drive_id = db.Column(db.Integer, db.ForeignKey('placement_drive.id'), nullable=False)
+    selected_job_id = db.Column(db.Integer, db.ForeignKey('drive_job.id'), nullable=True) # If selected, for which specific job
     application_date = db.Column(db.DateTime, default=datetime.now)
     status = db.Column(db.String(20), default='Applied') # Statuses: Applied, Shortlisted, Selected, Rejected
 
+    # Linking to selected job object
+    selected_job = db.relationship('DriveJob', foreign_keys=[selected_job_id])
+
     # To prevent double application by same student
     __table_args__ = (db.UniqueConstraint('student_id', 'drive_id', name='unique_student_drive_application'),)
+
+# To ensure the logic works:
+# 1. PlacementDrive is the main event.
+# 2. DriveJob contains the roles (Software Engineer - 10 LPA, Data Analyst - 8 LPA).
+# 3. Application tracks which drive the student applied to.
+# 4. If Application.status == 'Selected', Application.selected_job_id tells us which role they got.
+# 5. Student.placed_role, Student.package, and Student.placed_company_id cache the final result for quick access.

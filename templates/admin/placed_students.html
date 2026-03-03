@@ -26,17 +26,21 @@
                     <td><strong>{{ student.full_name }}</strong></td>
                     <td>
                         {% if student.placed_company %}
-                        <span class="text-primary fw-bold">{{ student.placed_company.name }}</span>
+                        <div class="d-flex align-items-center">
+                            {% if student.placed_company.logo_path %}
+                            <img src="{{ url_for('static', filename=student.placed_company.logo_path) }}"
+                                class="rounded-circle me-2 border shadow-sm"
+                                style="width: 32px; height: 32px; object-fit: cover;">
+                            {% endif %}
+                            <span class="text-primary fw-bold">{{ student.placed_company.name }}</span>
+                        </div>
                         {% else %}
                         <span class="text-muted">N/A</span>
                         {% endif %}
                     </td>
                     <td>
-                        {% if student.package %}
-                        <span class="badge bg-success">{{ student.package }} LPA</span>
-                        {% else %}
-                        <span class="badge bg-secondary">N/A</span>
-                        {% endif %}
+                        <div class="fw-bold text-success">{{ student.package }} LPA</div>
+                        <small class="text-muted d-block">{{ student.placed_role }}</small>
                     </td>
                     <td>{{ student.department }}</td>
                     <td>{{ "%.2f"|format(student.cgpa) }}</td>

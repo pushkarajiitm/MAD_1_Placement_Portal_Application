@@ -13,34 +13,76 @@
 <div class="row g-4">
     <!-- Statistic 1: Total Drives Created -->
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm h-100 p-3">
-            <div class="card-body text-center">
-                <h6 class="text-muted fw-bold mb-2">My Placement Drives</h6>
-                <h1 class="display-5 fw-bold text-primary mb-0">{{ my_drives_count }}</h1>
+        <a href="{{ url_for('company.company_drives') }}" class="text-decoration-none h-100 d-block">
+            <div class="card border-0 shadow-sm h-100 p-3 hover-active transition-all">
+                <div class="card-body text-center">
+                    <h6 class="text-muted fw-bold mb-2 uppercase-tracking">My Placement Drives</h6>
+                    <h1 class="display-5 fw-bold text-primary mb-0">{{ my_drives_count }}</h1>
+                    <div class="mt-2 small text-primary fw-bold">View Drives &rarr;</div>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- Statistic 2: Total Applications Received -->
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm h-100 p-3">
-            <div class="card-body text-center">
-                <h6 class="text-muted fw-bold mb-2">Total Applications</h6>
-                <h1 class="display-5 fw-bold text-success mb-0">{{ total_applications }}</h1>
+        <a href="{{ url_for('company.view_all_applications') }}" class="text-decoration-none h-100 d-block">
+            <div class="card border-0 shadow-sm h-100 p-3 hover-active transition-all">
+                <div class="card-body text-center">
+                    <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Total Applications</h6>
+                    <h1 class="display-5 fw-bold text-success mb-0">{{ total_applications }}</h1>
+                    <div class="mt-2 small text-success fw-bold">View All Students &rarr;</div>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- Statistic 3: Total Shortlisted Students -->
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm h-100 p-3">
-            <div class="card-body text-center">
-                <h6 class="text-muted fw-bold mb-2">Shortlisted Students</h6>
-                <h1 class="display-5 fw-bold text-warning mb-0">{{ shortlisted_count }}</h1>
+    <div class="col-md-3">
+        <a href="{{ url_for('company.view_all_applications', status_filter='Shortlisted') }}"
+            class="text-decoration-none h-100 d-block">
+            <div
+                class="card border-0 shadow-sm h-100 p-3 hover-active transition-all border-start border-4 border-warning">
+                <div class="card-body text-center">
+                    <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Shortlisted</h6>
+                    <h1 class="display-6 fw-bold text-warning mb-0">{{ shortlisted_count }}</h1>
+                </div>
             </div>
-        </div>
+        </a>
+    </div>
+
+    <!-- Statistic 4: Total Selected Students -->
+    <div class="col-md-3">
+        <a href="{{ url_for('company.view_all_applications', status_filter='Selected') }}"
+            class="text-decoration-none h-100 d-block">
+            <div
+                class="card border-0 shadow-sm h-100 p-3 hover-active transition-all border-start border-4 border-success">
+                <div class="card-body text-center">
+                    <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Selected Students</h6>
+                    <h1 class="display-6 fw-bold text-success mb-0">{{ selected_count }}</h1>
+                </div>
+            </div>
+        </a>
     </div>
 </div>
+
+<style>
+    .hover-active:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .1) !important;
+        background-color: #f8f9fa;
+    }
+
+    .transition-all {
+        transition: all 0.3s ease;
+    }
+
+    .uppercase-tracking {
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.75rem;
+    }
+</style>
 
 <div class="row mt-5">
     <div class="col-12 text-center">

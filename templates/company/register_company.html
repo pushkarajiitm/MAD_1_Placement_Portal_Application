@@ -12,7 +12,7 @@
                     <p class="text-muted">Register your organization to start hiring from our talented student pool.</p>
                 </div>
 
-                <form action="{{ url_for('register_company') }}" method="POST">
+                <form action="{{ url_for('register_company') }}" method="POST" enctype="multipart/form-data">
                     <div class="row">
                         <!-- Account Details Column -->
                         <div class="col-md-6 border-end pe-md-4">
@@ -46,6 +46,11 @@
                                 <label for="hr_contact" class="form-label fw-bold small">HR Contact Number</label>
                                 <input type="text" class="form-control" id="hr_contact" name="hr_contact"
                                     placeholder="+91 9876543210" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="logo" class="form-label fw-bold small">Company Logo</label>
+                                <input type="file" class="form-control" id="logo" name="logo" accept="image/*">
+                                <div class="form-text small">Recommended: Square PNG/JPG</div>
                             </div>
                             <div class="mb-3">
                                 <label for="website" class="form-label fw-bold small">Company Website</label>

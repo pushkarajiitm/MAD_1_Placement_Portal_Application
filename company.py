@@ -40,11 +40,13 @@ def company_dashboard():
     drive_ids = [drive.id for drive in my_drives]
     count_total_applications = Application.query.filter(Application.drive_id.in_(drive_ids)).count() if drive_ids else 0
     count_shortlisted = Application.query.filter(Application.drive_id.in_(drive_ids), Application.status == 'Shortlisted').count() if drive_ids else 0
+    count_selected = Application.query.filter(Application.drive_id.in_(drive_ids), Application.status == 'Selected').count() if drive_ids else 0
     
     return render_template('company/dashboard.html', 
                           my_drives_count=count_my_drives, 
                           total_applications=count_total_applications,
-                          shortlisted_count=count_shortlisted)
+                          shortlisted_count=count_shortlisted,
+                          selected_count=count_selected)
 
 # Route: View and Create placement drives
 @company_bp.route('/drives', methods=['GET', 'POST'])
@@ -65,6 +67,10 @@ def company_drives():
         eligibility_input = request.form.get('eligibility_criteria')
         deadline_input = request.form.get('application_deadline')
         
+        # Get roles and packages (sent as lists)
+        role_titles = request.form.getlist('role_titles[]')
+        packages = request.form.getlist('packages[]')
+        
         # Convert the string date from the HTML form into a Python Date object
         deadline_date = datetime.strptime(deadline_input, '%Y-%m-%d')
         
@@ -77,8 +83,22 @@ def company_drives():
             application_deadline=deadline_date
         )
         
-        # Save to database
+        # Save drive first to get ID
         db.session.add(new_drive_record)
+        db.session.flush()
+
+        # Add specific roles
+        from models import DriveJob
+        for role_title, package in zip(role_titles, packages):
+            if role_title and package:
+                job = DriveJob(
+                    drive_id=new_drive_record.id,
+                    role_title=role_title,
+                    package=float(package)
+                )
+                db.session.add(job)
+        
+        # Save to database
         db.session.commit()
         
         flash('New placement drive created and is pending admin approval!', 'success')
@@ -107,7 +127,7 @@ def view_applications(drive_id):
     return render_template('company/applications.html', drive=drive_record, applications=application_records)
 
 # Route: Update the status of a specific student application
-@company_bp.route('/application/<int:app_id>/status/<string:new_status>')
+@company_bp.route('/application/<int:app_id>/status/<string:new_status>', methods=['GET', 'POST'])
 @login_required
 @company_required
 def update_application_status(app_id, new_status):
@@ -125,10 +145,53 @@ def update_application_status(app_id, new_status):
         flash('Invalid Access.', 'danger')
         return redirect(url_for('company.company_dashboard'))
         
-    # Update status and save
-    application_record.status = new_status
-    db.session.commit()
+    if new_status == 'Selected' and request.method == 'POST':
+        selected_job_id = request.form.get('selected_job_id')
+        if not selected_job_id:
+            flash('Please select a role for the student.', 'warning')
+            return redirect(url_for('company.view_applications', drive_id=application_record.drive_id))
+            
+        from models import DriveJob
+        job = DriveJob.query.get(selected_job_id)
+        if job:
+            application_record.status = 'Selected'
+            application_record.selected_job_id = job.id
+            
+            # Note: Final placement status update is now handled by the Admin
+            db.session.commit()
+            flash(f'Student selected for {job.role_title}!', 'success')
+    else:
+        # Update status and save
+        application_record.status = new_status
+        db.session.commit()
+        flash(f'Application status updated to {new_status}.', 'success')
     
-    flash(f'Application status updated to {new_status}.', 'success')
     # Go back to the list of applications for that specific drive
     return redirect(url_for('company.view_applications', drive_id=application_record.drive_id))
+# Route: View all applications across all drives with optional status filter
+@company_bp.route('/applications/all')
+@company_bp.route('/applications/all/<string:status_filter>')
+@login_required
+@company_required
+def view_all_applications(status_filter=None):
+    company_record = current_user.company_profile
+    
+    # Get all drives for this company
+    my_drives = PlacementDrive.query.filter_by(company_id=company_record.id).all()
+    drive_ids = [drive.id for drive in my_drives]
+    
+    if not drive_ids:
+        flash('No drives found. Create a drive first!', 'info')
+        return redirect(url_for('company.company_dashboard'))
+
+    # Build the query
+    query = Application.query.filter(Application.drive_id.in_(drive_ids))
+    
+    if status_filter:
+        query = query.filter(Application.status == status_filter)
+        
+    application_records = query.order_by(Application.application_date.desc()).all()
+    
+    return render_template('company/all_applications.html', 
+                           applications=application_records, 
+                           current_filter=status_filter)

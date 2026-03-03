@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block title %}All Applications - {{ current_user.username }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+            <h2 class="fw-bold mb-0">Student Applications</h2>
+            <p class="text-muted mb-0">
+                {% if current_filter %}
+                Showing <strong>{{ current_filter }}</strong> students across all drives
+                {% else %}
+                Showing all applications across all drives
+                {% endif %}
+            </p>
+        </div>
+        <div class="col-md-6 text-md-end mt-3 mt-md-0">
+            <a href="{{ url_for('company.company_dashboard') }}" class="btn btn-outline-secondary rounded-pill px-4">
+                <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-header bg-white py-3 border-bottom border-light">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0">Applications List</h5>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-light border dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        Filter: {{ current_filter if current_filter else 'All' }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                        <li><a class="dropdown-item" href="{{ url_for('company.view_all_applications') }}">All</a></li>
+                        <li><a class="dropdown-item"
+                                href="{{ url_for('company.view_all_applications', status_filter='Shortlisted') }}">Shortlisted</a>
+                        </li>
+                        <li><a class="dropdown-item"
+                                href="{{ url_for('company.view_all_applications', status_filter='Selected') }}">Selected</a>
+                        </li>
+                        <li><a class="dropdown-item"
+                                href="{{ url_for('company.view_all_applications', status_filter='Applied') }}">Applied</a>
+                        </li>
+                        <li><a class="dropdown-item"
+                                href="{{ url_for('company.view_all_applications', status_filter='Rejected') }}">Rejected</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light text-muted small text-uppercase fw-bold">
+                        <tr>
+                            <th class="ps-4">Student</th>
+                            <th>Contact / Info</th>
+                            <th>Drive & Role</th>
+                            <th>Status</th>
+                            <th class="text-end pe-4">Applied On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3"
+                                        style="width: 40px; height: 40px;">
+                                        <i class="bi bi-person text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold">{{ app.student.full_name }}</div>
+                                        <small class="text-muted">{{ app.student.department }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="small">
+                                    <div><i class="bi bi-envelope me-1"></i> {{ app.student.user.email }}</div>
+                                    <div><i class="bi bi-telephone me-1"></i> {{ app.student.contact_number }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="fw-bold">{{ app.drive.job_title }}</div>
+                                {% if app.status == 'Selected' and app.selected_job %}
+                                <div class="badge bg-soft-success text-success small border border-success">
+                                    Role: {{ app.selected_job.role_title }}
+                                </div>
+                                {% else %}
+                                <small class="text-muted">Applied to Drive</small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if app.status == 'Applied' %}
+                                <span
+                                    class="badge bg-light text-primary border border-primary-subtle px-3 py-2 rounded-pill">Applied</span>
+                                {% elif app.status == 'Shortlisted' %}
+                                <span
+                                    class="badge bg-soft-warning text-dark border border-warning px-3 py-2 rounded-pill">Shortlisted</span>
+                                {% elif app.status == 'Selected' %}
+                                <span
+                                    class="badge bg-soft-success text-success border border-success px-3 py-2 rounded-pill">Selected</span>
+                                {% elif app.status == 'Rejected' %}
+                                <span
+                                    class="badge bg-soft-danger text-danger border border-danger px-3 py-2 rounded-pill">Rejected</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="small text-muted">{{ app.application_date.strftime('%B %d, %Y') }}</div>
+                                <a href="{{ url_for('company.view_applications', drive_id=app.drive_id) }}"
+                                    class="btn btn-link btn-sm p-0 fw-bold">View Drive</a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="py-5 text-center text-muted">
+                                <i class="bi bi-mailbox display-4 mb-3 d-block"></i>
+                                No applications found for this filter.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-soft-success {
+        background-color: #d1e7dd;
+    }
+
+    .bg-soft-warning {
+        background-color: #fff3cd;
+    }
+
+    .bg-soft-danger {
+        background-color: #f8d7da;
+    }
+
+    .rounded-4 {
+        border-radius: 1rem !important;
+    }
+</style>
+{% endblock %}

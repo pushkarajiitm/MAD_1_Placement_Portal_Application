@@ -80,15 +80,38 @@
             <div class="modal-body pt-3">
                 <form action="{{ url_for('company.company_drives') }}" method="POST">
                     <div class="mb-3">
-                        <label class="form-label text-muted fw-bold small mb-1">Job Title</label>
+                        <label class="form-label text-muted fw-bold small mb-1">Job Title / Drive Name</label>
                         <input type="text" class="form-control" name="job_title" required
-                            placeholder="e.g. Software Engineer">
+                            placeholder="e.g. Campus Recruitment 2024">
                     </div>
                     <div class="mb-3">
                         <label class="form-label text-muted fw-bold small mb-1">Job Description</label>
                         <textarea class="form-control" name="job_description" rows="3" required
-                            placeholder="Describe the role..."></textarea>
+                            placeholder="General overview of the drive..."></textarea>
                     </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-muted fw-bold small mb-2 d-block">Offered Roles & Packages</label>
+                        <div id="roles-container">
+                            <div class="row g-2 mb-2 role-row">
+                                <div class="col-7">
+                                    <input type="text" class="form-control form-control-sm" name="role_titles[]"
+                                        placeholder="Role (e.g. SDE)" required>
+                                </div>
+                                <div class="col-4">
+                                    <input type="number" step="0.01" class="form-control form-control-sm"
+                                        name="packages[]" placeholder="LPA" required>
+                                </div>
+                                <div class="col-1">
+                                    <button type="button" class="btn btn-sm btn-outline-danger border-0 remove-role"
+                                        style="display:none;">&times;</button>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary mt-1" id="add-role-btn">+ Add
+                            Another Role</button>
+                    </div>
+
                     <div class="mb-3">
                         <label class="form-label text-muted fw-bold small mb-1">Eligibility Criteria</label>
                         <textarea class="form-control" name="eligibility_criteria" rows="2" required
@@ -100,6 +123,21 @@
                     </div>
                     <button type="submit" class="btn btn-primary w-100 fw-bold py-2">Submit for Approval</button>
                 </form>
+
+                <script>
+                    document.getElementById('add-role-btn').addEventListener('click', function () {
+                        const container = document.getElementById('roles-container');
+                        const newRow = container.firstElementChild.cloneNode(true);
+                        newRow.querySelector('input[name="role_titles[]"]').value = '';
+                        newRow.querySelector('input[name="packages[]"]').value = '';
+                        newRow.querySelector('.remove-role').style.display = 'block';
+                        container.appendChild(newRow);
+
+                        newRow.querySelector('.remove-role').addEventListener('click', function () {
+                            newRow.remove();
+                        });
+                    });
+                </script>
             </div>
         </div>
     </div>

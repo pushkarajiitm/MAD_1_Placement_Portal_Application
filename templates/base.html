@@ -26,12 +26,45 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
-                    {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                    {% if current_user.is_authenticated %}
+                    {% if current_user.role == 'admin' %}
                     <li class="nav-item">
-                        <a class="nav-link px-3 fw-bold text-primary"
-                            href="{{ url_for('admin.admin_dashboard') }}">Admin
-                            Dashboard</a>
+                        <a class="nav-link px-2 fw-bold text-primary"
+                            href="{{ url_for('admin.admin_dashboard') }}">Dashboard</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="{{ url_for('admin.admin_companies') }}">Companies</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="{{ url_for('admin.admin_students') }}">Students</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="{{ url_for('admin.admin_drives') }}">Drives</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="{{ url_for('admin.placement_history') }}">History</a>
+                    </li>
+                    {% elif current_user.role == 'company' %}
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="{{ url_for('company.company_dashboard') }}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="{{ url_for('company.company_drives') }}">My Drives</a>
+                    </li>
+                    {% elif current_user.role == 'student' %}
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="{{ url_for('student.dashboard') }}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="{{ url_for('student.drives') }}">Drives</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="{{ url_for('student.profile') }}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="{{ url_for('student.history') }}">History</a>
+                    </li>
+                    {% endif %}
                     {% else %}
                     <li class="nav-item">
                         <a class="nav-link px-3" href="{{ url_for('index') }}">Home</a>

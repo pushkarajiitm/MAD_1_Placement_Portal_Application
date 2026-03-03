@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
-from models import db, User, Student, Company, PlacementDrive
+from models import db, User, Student, Company, PlacementDrive, Application
 from functools import wraps
 
 # Initialize the Admin Blueprint
@@ -133,14 +133,19 @@ def mark_as_placed(student_id):
     # Retrieve form data from the placement modal
     placed_company_id = request.form.get('company_id')
     salary_package = request.form.get('package')
+    role_title = request.form.get('role')
     
     # Verify input exists before updating the student's status
-    if student_record and placed_company_id and salary_package:
-        student_record.placement_status = 'Placed'
-        student_record.placed_company_id = int(placed_company_id)
-        student_record.package = float(salary_package)
-        db.session.commit()
-        
+    if student_record and placed_company_id and salary_package and role_title:
+        try:
+            student_record.placement_status = 'Placed'
+            student_record.placed_company_id = int(placed_company_id)
+            student_record.package = float(salary_package)
+            student_record.placed_role = role_title
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            
     return redirect(url_for('admin.admin_students'))
 
 # Route: Blacklist Student
@@ -234,3 +239,19 @@ def delete_drive(drive_id):
         db.session.delete(drive_record)
         db.session.commit()
     return redirect(url_for('admin.admin_drives'))
+
+# Route: View all historical placement data
+@admin_bp.route('/placement-history')
+@login_required
+@admin_required
+def placement_history():
+    # Get all applications that resulted in selection
+    placed_applications = Application.query.filter_by(status='Selected').order_by(Application.application_date.desc()).all()
+    
+    # Calculate some historical stats
+    total_packages = sum([app.student.package for app in placed_applications if app.student.package])
+    avg_package = total_packages / len(placed_applications) if placed_applications else 0
+    
+    return render_template('admin/placement_history.html', 
+                           applications=placed_applications, 
+                           avg_package=round(avg_package, 2))

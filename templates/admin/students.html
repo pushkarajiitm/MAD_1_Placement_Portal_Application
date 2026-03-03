@@ -11,7 +11,7 @@
         </form>
     </div>
 
-    <div class="table-responsive shadow-sm rounded">
+    <div class="table-responsive-stack shadow-sm rounded">
         <table class="table table-hover align-middle bg-white">
             <thead class="table-dark">
                 <tr>
@@ -19,13 +19,17 @@
                     <th>Full Name</th>
                     <th>Dept.</th>
                     <th>CGPA</th>
-                    <th>Placement</th>
+                    <th>Selection Status</th>
+                    <th>Placement Status</th>
                     <th>Blacklisted</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for student in students %}
+                {% set selected_app = student.applications|selectattr('status', 'equalto', 'Selected')|list|first %}
+                {% set shortlisted_app = student.applications|selectattr('status', 'equalto', 'Shortlisted')|list|first
+                %}
                 <tr>
                     <td>{{ student.id }}</td>
                     <td>
@@ -35,10 +39,35 @@
                     <td>{{ student.department }}</td>
                     <td>{{ "%.2f"|format(student.cgpa) }}</td>
                     <td>
-                        {% if student.placement_status == 'Placed' %}
-                        <span class="badge bg-success">Placed</span>
+                        {% if selected_app %}
+                        <div class="badge bg-soft-success text-success border border-success">
+                            <i class="bi bi-check-circle-fill me-1"></i> Selected: {{ selected_app.drive.company.name }}
+                        </div>
+                        <div class="small text-muted mt-1">{{ selected_app.selected_job.role_title if
+                            selected_app.selected_job else 'Role N/A' }}</div>
+                        {% elif shortlisted_app %}
+                        <div class="badge bg-soft-warning text-dark border border-warning">
+                            <i class="bi bi-hourglass-split me-1"></i> Shortlisted: {{
+                            shortlisted_app.drive.company.name }}
+                        </div>
                         {% else %}
-                        <span class="badge bg-secondary">Unplaced</span>
+                        <span class="text-muted italic small font-monospace">No Action Yet</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if student.placement_status == 'Placed' %}
+                        <span class="badge bg-success shadow-sm px-3">Placed</span>
+                        <div class="small text-muted mt-1">{{ student.placed_company.name }}</div>
+                        {% else %}
+                        <div class="d-flex flex-column align-items-start gap-2">
+                            <span class="badge bg-secondary shadow-sm px-3">Unplaced</span>
+                            {% if not student.is_blacklisted %}
+                            <button type="button" class="btn btn-sm btn-success fw-bold w-100" data-bs-toggle="modal"
+                                data-bs-target="#placeModal{{ student.id }}">
+                                <i class="bi bi-briefcase me-1"></i> Mark Placed
+                            </button>
+                            {% endif %}
+                        </div>
                         {% endif %}
                     </td>
                     <td>
@@ -49,69 +78,31 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% if student.placement_status == 'Unplaced' %}
-                        <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal"
-                            data-bs-target="#placeModal{{ student.id }}">Mark Placed</button>
-                        {% endif %}
-
-                        <div class="dropdown d-inline-block">
-                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
-                                data-bs-toggle="dropdown">
-                                More
-                            </button>
-                            <ul class="dropdown-menu">
-                                {% if not student.is_blacklisted %}
-                                <li><a class="dropdown-item text-warning"
-                                        href="{{ url_for('admin.blacklist_student', student_id=student.id) }}">Blacklist</a>
-                                </li>
-                                {% else %}
-                                <li><a class="dropdown-item"
-                                        href="{{ url_for('admin.remove_blacklist_student', student_id=student.id) }}">Remove
-                                        Blacklist</a></li>
-                                {% endif %}
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item text-danger"
-                                        href="{{ url_for('admin.delete_student', student_id=student.id) }}"
-                                        onclick="return confirm('Delete this student profile?')">Delete</a></li>
-                            </ul>
-                        </div>
-
-                        <!-- Placement Modal -->
-                        <div class="modal fade" id="placeModal{{ student.id }}" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <form action="{{ url_for('admin.mark_as_placed', student_id=student.id) }}"
-                                    method="POST">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Mark {{ student.full_name }} as Placed</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="mb-3">
-                                                <label class="form-label">Select Company</label>
-                                                <select name="company_id" class="form-select" required>
-                                                    <option value="">-- Choose Company --</option>
-                                                    {% for company in companies %}
-                                                    <option value="{{ company.id }}">{{ company.name }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Package (LPA)</label>
-                                                <input type="number" step="0.01" name="package" class="form-control"
-                                                    placeholder="e.g. 12.5" required>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-success">Save Placement</button>
-                                        </div>
-                                    </div>
-                                </form>
+                        <div class="d-flex gap-1">
+                            <div class="dropdown">
+                                <button class="btn btn-xs btn-outline-secondary dropdown-toggle" type="button"
+                                    data-bs-toggle="dropdown">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                    {% if not student.is_blacklisted %}
+                                    <li><a class="dropdown-item text-warning"
+                                            href="{{ url_for('admin.blacklist_student', student_id=student.id) }}">
+                                            <i class="bi bi-slash-circle me-2"></i>Blacklist</a>
+                                    </li>
+                                    {% else %}
+                                    <li><a class="dropdown-item"
+                                            href="{{ url_for('admin.remove_blacklist_student', student_id=student.id) }}">
+                                            <i class="bi bi-check2-circle me-2"></i>Remove Blacklist</a></li>
+                                    {% endif %}
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item text-danger"
+                                            href="{{ url_for('admin.delete_student', student_id=student.id) }}"
+                                            onclick="return confirm('Delete this student profile?')">
+                                            <i class="bi bi-trash me-2"></i>Delete</a></li>
+                                </ul>
                             </div>
                         </div>
                     </td>
@@ -120,5 +111,54 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Modals Section -->
+    {% for student in students %}
+    {% set selected_app = student.applications|selectattr('status', 'equalto', 'Selected')|list|first %}
+    <div class="modal fade" id="placeModal{{ student.id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="{{ url_for('admin.mark_as_placed', student_id=student.id) }}" method="POST">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title fw-bold">Mark {{ student.full_name }} as Placed</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Select Company</label>
+                            <select name="company_id" class="form-select" required>
+                                <option value="">-- Choose Company --</option>
+                                {% for company in companies %}
+                                <option value="{{ company.id }}" {% if selected_app and
+                                    selected_app.drive.company_id==company.id %}selected{% endif %}>
+                                    {{ company.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Package (LPA)</label>
+                            <input type="number" step="0.01" name="package" class="form-control" placeholder="e.g. 12.5"
+                                value="{{ selected_app.selected_job.package if selected_app and selected_app.selected_job else '' }}"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Role / Job Title</label>
+                            <input type="text" name="role" class="form-control" placeholder="e.g. Software Engineer"
+                                value="{{ selected_app.selected_job.role_title if selected_app and selected_app.selected_job else '' }}"
+                                required>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary rounded-pill px-4"
+                            data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success rounded-pill px-4 fw-bold">Save Placement</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 {% endblock %}

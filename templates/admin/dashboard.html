@@ -4,49 +4,77 @@
 <div class="container mt-4">
     <h2 class="mb-4">Admin Dashboard</h2>
 
-    <div class="row">
-        <!-- Statistics Cards -->
-        <div class="col-md-3 mb-4">
-            <div class="card bg-primary text-white shadow">
-                <div class="card-body">
-                    <h5 class="card-title">Pending Companies</h5>
-                    <p class="card-text display-4">{{ pending_companies }}</p>
-                    <a href="{{ url_for('admin.admin_companies', search='') }}"
-                        class="btn btn-outline-light btn-sm">Manage Companies</a>
+    <div class="row g-4 mb-4">
+        <!-- Statistic 1: Pending Companies -->
+        <div class="col-md-3">
+            <a href="{{ url_for('admin.admin_companies') }}" class="text-decoration-none h-100 d-block">
+                <div
+                    class="card border-0 shadow-sm h-100 p-3 hover-active transition-all border-start border-4 border-primary">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Pending Companies</h6>
+                        <h1 class="display-6 fw-bold text-primary mb-0">{{ pending_companies }}</h1>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
-        <div class="col-md-3 mb-4">
-            <div class="card bg-success text-white shadow">
-                <div class="card-body">
-                    <h5 class="card-title">Pending Drives</h5>
-                    <p class="card-text display-4">{{ pending_drives }}</p>
-                    <a href="{{ url_for('admin.admin_drives', search='') }}" class="btn btn-outline-light btn-sm">Manage
-                        Drives</a>
+
+        <!-- Statistic 2: Pending Drives -->
+        <div class="col-md-3">
+            <a href="{{ url_for('admin.admin_drives') }}" class="text-decoration-none h-100 d-block">
+                <div
+                    class="card border-0 shadow-sm h-100 p-3 hover-active transition-all border-start border-4 border-success">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Pending Drives</h6>
+                        <h1 class="display-6 fw-bold text-success mb-0">{{ pending_drives }}</h1>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
-        <div class="col-md-3 mb-4">
-            <div class="card bg-info text-white shadow">
-                <div class="card-body">
-                    <h5 class="card-title">Total Students</h5>
-                    <p class="card-text display-4">{{ total_students }}</p>
-                    <a href="{{ url_for('admin.admin_students', search='') }}" class="btn btn-outline-light btn-sm">View
-                        Students</a>
+
+        <!-- Statistic 3: Total Students -->
+        <div class="col-md-3">
+            <a href="{{ url_for('admin.admin_students') }}" class="text-decoration-none h-100 d-block">
+                <div
+                    class="card border-0 shadow-sm h-100 p-3 hover-active transition-all border-start border-4 border-info">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Total Students</h6>
+                        <h1 class="display-6 fw-bold text-info mb-0">{{ total_students }}</h1>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
-        <div class="col-md-3 mb-4">
-            <div class="card bg-warning text-dark shadow">
-                <div class="card-body">
-                    <h5 class="card-title">Total Placed</h5>
-                    <p class="card-text display-4">{{ total_placed }}</p>
-                    <a href="{{ url_for('admin.placed_students') }}" class="btn btn-outline-dark btn-sm">Placed
-                        Students</a>
+
+        <!-- Statistic 4: Total Placed -->
+        <div class="col-md-3">
+            <a href="{{ url_for('admin.placed_students') }}" class="text-decoration-none h-100 d-block">
+                <div
+                    class="card border-0 shadow-sm h-100 p-3 hover-active transition-all border-start border-4 border-warning">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Total Placed</h6>
+                        <h1 class="display-6 fw-bold text-warning mb-0">{{ total_placed }}</h1>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
+
+    <style>
+        .hover-active:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .1) !important;
+            background-color: #f8f9fa;
+        }
+
+        .transition-all {
+            transition: all 0.3s ease;
+        }
+
+        .uppercase-tracking {
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.75rem;
+        }
+    </style>
 
     <!-- Quick Links / Actions Area -->
     <div class="row mt-4">

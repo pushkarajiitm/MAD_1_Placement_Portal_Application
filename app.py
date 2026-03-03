@@ -8,6 +8,7 @@ from functools import wraps
 # Import the blueprints
 from admin import admin_bp
 from company import company_bp
+from student import student_bp
 
 app = Flask(__name__)
 
@@ -16,9 +17,15 @@ app.config['SECRET_KEY'] = 'MAD-1'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///placement_portal.db' 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/uploads/resumes'
+app.config['LOGO_UPLOAD_FOLDER'] = 'static/uploads/logos'
 
-# Ensure the upload folder exists to prevent errors when saving files
+# Ensure the upload folders exist to prevent errors when saving files
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+os.makedirs(app.config['LOGO_UPLOAD_FOLDER'], exist_ok=True)
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
 
 # Initialize the SQLAlchemy database instance with the Flask app
 db.init_app(app)
@@ -31,6 +38,7 @@ login_manager.login_view = 'login'
 # Register the blueprint routes with the main application
 app.register_blueprint(admin_bp)
 app.register_blueprint(company_bp)
+app.register_blueprint(student_bp)
 
 # Define how Flask-Login loads a user object from the session user_id
 @login_manager.user_loader
@@ -76,7 +84,10 @@ def login():
                 return redirect(url_for('admin.admin_dashboard'))
             elif user_record.role == 'company':
                 return redirect(url_for('company.company_dashboard'))
-            # Default fallback for student
+            elif user_record.role == 'student':
+                return redirect(url_for('student.dashboard'))
+            
+            # Default fallback
             return redirect(url_for('index'))
         else:
             flash('Invalid username or password', 'danger')
@@ -131,7 +142,7 @@ def register_student():
         return redirect(url_for('login'))
 
     # Render the empty student registration form for GET requests
-    return render_template('register_student.html')
+    return render_template('student/register_student.html')
 
 # Route: Company Registration Page
 @app.route('/register/company', methods=['GET', 'POST'])
@@ -148,6 +159,16 @@ def register_company():
         form_website = request.form.get('website')
         form_description = request.form.get('description')
 
+        # Handle the logo file upload
+        logo_file = request.files.get('logo')
+        logo_file_path = None
+        
+        if logo_file and logo_file.filename != '':
+            if allowed_file(logo_file.filename):
+                secure_name = secure_filename(f"{form_username}_logo_{logo_file.filename}")
+                logo_file.save(os.path.join(app.config['LOGO_UPLOAD_FOLDER'], secure_name))
+                logo_file_path = f"uploads/logos/{secure_name}"
+
         # Step 1: Create the base User authentication record
         new_user_account = User(username=form_username, email=form_email, password=form_password, role='company')
         db.session.add(new_user_account)
@@ -159,7 +180,8 @@ def register_company():
             name=form_company_name, 
             hr_contact=form_hr_contact, 
             website=form_website, 
-            description=form_description
+            description=form_description,
+            logo_path=logo_file_path
         )
         db.session.add(new_company_profile)
         
@@ -182,4 +204,4 @@ def logout():
 
 if __name__ == '__main__':
     # Start the Flask application development server on port 5001
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5004)

@@ -126,3 +126,56 @@ body {
     border-radius: 20px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
+
+/* Table & Action Visibility Fixes */
+.table-responsive-stack {
+    overflow-x: auto;
+    overflow-y: visible !important;
+    min-height: 200px;
+    /* Reduced to avoid overlap */
+    padding-bottom: 80px;
+    margin-bottom: -80px;
+    z-index: 10;
+    position: relative;
+}
+
+/* Base table responsive fallback fix */
+.table-responsive {
+    overflow-x: auto;
+    overflow-y: visible !important;
+    padding-bottom: 40px;
+    margin-bottom: -40px;
+}
+
+/* Ensure parents allow overflow for dropdowns */
+.card,
+.container,
+.row,
+[class*="col-"] {
+    overflow: visible !important;
+}
+
+.btn-xs {
+    padding: 2px 6px;
+    font-size: 0.75rem;
+    border-radius: 4px;
+}
+
+/* Status Badges */
+.bg-soft-success {
+    background: rgba(40, 167, 69, 0.1);
+    color: #198754;
+    border: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+.bg-soft-warning {
+    background: rgba(255, 193, 7, 0.1);
+    color: #997404;
+    border: 1px solid rgba(255, 193, 7, 0.2);
+}
+
+.bg-soft-info {
+    background: rgba(13, 202, 240, 0.1);
+    color: #087990;
+    border: 1px solid rgba(13, 202, 240, 0.2);
+}
