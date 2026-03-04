@@ -27,11 +27,19 @@ def admin_dashboard():
     count_total_students = Student.query.count()
     count_total_placed = Student.query.filter_by(placement_status='Placed').count()
     
+    # New statistics required by requirements
+    count_total_companies = Company.query.count()
+    count_total_drives = PlacementDrive.query.count()
+    count_total_applications = Application.query.count()
+    
     return render_template('admin/dashboard.html', 
                           pending_companies=count_pending_companies, 
                           pending_drives=count_pending_drives,
                           total_students=count_total_students,
-                          total_placed=count_total_placed)
+                          total_placed=count_total_placed,
+                          total_companies=count_total_companies,
+                          total_drives=count_total_drives,
+                          total_applications=count_total_applications)
 
 # Route: List Companies
 @admin_bp.route('/companies')
@@ -114,7 +122,19 @@ def admin_students():
     search_query = request.args.get('search', '')
     
     if search_query:
-        student_records = Student.query.filter(Student.full_name.ilike(f'%{search_query}%')).all()
+        # Check if search_query is an integer (for ID search)
+        try:
+            student_id = int(search_query)
+            student_records = Student.query.filter(
+                (Student.id == student_id) |
+                (Student.full_name.ilike(f'%{search_query}%')) |
+                (Student.contact_number.ilike(f'%{search_query}%'))
+            ).all()
+        except ValueError:
+            student_records = Student.query.filter(
+                (Student.full_name.ilike(f'%{search_query}%')) |
+                (Student.contact_number.ilike(f'%{search_query}%'))
+            ).all()
     else:
         student_records = Student.query.all()
         

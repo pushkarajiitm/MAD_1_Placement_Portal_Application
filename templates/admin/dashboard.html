@@ -4,54 +4,75 @@
 <div class="container mt-4">
     <h2 class="mb-4">Admin Dashboard</h2>
 
-    <div class="row g-4 mb-4">
-        <!-- Statistic 1: Pending Companies -->
+    <div class="row g-4 mb-4 text-center">
+        <!-- Main Statistics -->
         <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 p-3 border-top border-4 border-info">
+                <div class="card-body">
+                    <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Total Students</h6>
+                    <h1 class="display-6 fw-bold text-info mb-0">{{ total_students }}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 p-3 border-top border-4 border-primary">
+                <div class="card-body">
+                    <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Total Companies</h6>
+                    <h1 class="display-6 fw-bold text-primary mb-0">{{ total_companies }}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 p-3 border-top border-4 border-success">
+                <div class="card-body">
+                    <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Total Drives</h6>
+                    <h1 class="display-6 fw-bold text-success mb-0">{{ total_drives }}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 p-3 border-top border-4 border-dark">
+                <div class="card-body">
+                    <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Applications</h6>
+                    <h1 class="display-6 fw-bold text-dark mb-0">{{ total_applications }}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <!-- Actionable/Pending Statistics -->
+        <div class="col-md-4">
             <a href="{{ url_for('admin.admin_companies') }}" class="text-decoration-none h-100 d-block">
                 <div
-                    class="card border-0 shadow-sm h-100 p-3 hover-active transition-all border-start border-4 border-primary">
-                    <div class="card-body text-center">
-                        <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Pending Companies</h6>
-                        <h1 class="display-6 fw-bold text-primary mb-0">{{ pending_companies }}</h1>
+                    class="card border-0 shadow-sm h-100 p-3 hover-active transition-all border-start border-4 border-warning">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <h6 class="text-muted fw-bold mb-0 uppercase-tracking">Pending Companies</h6>
+                        <span class="badge bg-warning text-dark fs-5">{{ pending_companies }}</span>
                     </div>
                 </div>
             </a>
         </div>
 
-        <!-- Statistic 2: Pending Drives -->
-        <div class="col-md-3">
+        <div class="col-md-4">
             <a href="{{ url_for('admin.admin_drives') }}" class="text-decoration-none h-100 d-block">
                 <div
-                    class="card border-0 shadow-sm h-100 p-3 hover-active transition-all border-start border-4 border-success">
-                    <div class="card-body text-center">
-                        <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Pending Drives</h6>
-                        <h1 class="display-6 fw-bold text-success mb-0">{{ pending_drives }}</h1>
+                    class="card border-0 shadow-sm h-100 p-3 hover-active transition-all border-start border-4 border-danger">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <h6 class="text-muted fw-bold mb-0 uppercase-tracking">Pending Drives</h6>
+                        <span class="badge bg-danger fs-5">{{ pending_drives }}</span>
                     </div>
                 </div>
             </a>
         </div>
 
-        <!-- Statistic 3: Total Students -->
-        <div class="col-md-3">
-            <a href="{{ url_for('admin.admin_students') }}" class="text-decoration-none h-100 d-block">
-                <div
-                    class="card border-0 shadow-sm h-100 p-3 hover-active transition-all border-start border-4 border-info">
-                    <div class="card-body text-center">
-                        <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Total Students</h6>
-                        <h1 class="display-6 fw-bold text-info mb-0">{{ total_students }}</h1>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <!-- Statistic 4: Total Placed -->
-        <div class="col-md-3">
+        <div class="col-md-4">
             <a href="{{ url_for('admin.placed_students') }}" class="text-decoration-none h-100 d-block">
                 <div
-                    class="card border-0 shadow-sm h-100 p-3 hover-active transition-all border-start border-4 border-warning">
-                    <div class="card-body text-center">
-                        <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Total Placed</h6>
-                        <h1 class="display-6 fw-bold text-warning mb-0">{{ total_placed }}</h1>
+                    class="card border-0 shadow-sm h-100 p-3 hover-active transition-all border-start border-4 border-success">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <h6 class="text-muted fw-bold mb-0 uppercase-tracking">Students Placed</h6>
+                        <span class="badge bg-success fs-5">{{ total_placed }}</span>
                     </div>
                 </div>
             </a>

@@ -168,6 +168,83 @@ def update_application_status(app_id, new_status):
     
     # Go back to the list of applications for that specific drive
     return redirect(url_for('company.view_applications', drive_id=application_record.drive_id))
+
+# Route: Edit a placement drive
+@company_bp.route('/drive/edit/<int:drive_id>', methods=['GET', 'POST'])
+@login_required
+@company_required
+def edit_drive(drive_id):
+    company_record = current_user.company_profile
+    drive_record = PlacementDrive.query.get_or_404(drive_id)
+    
+    if drive_record.company_id != company_record.id:
+        flash('Unauthorized.', 'danger')
+        return redirect(url_for('company.company_drives'))
+        
+    if request.method == 'POST':
+        drive_record.job_title = request.form.get('job_title')
+        drive_record.job_description = request.form.get('job_description')
+        drive_record.eligibility_criteria = request.form.get('eligibility_criteria')
+        deadline_input = request.form.get('application_deadline')
+        drive_record.application_deadline = datetime.strptime(deadline_input, '%Y-%m-%d')
+        
+        # Simple implementation: Re-create roles (or more complex update logic)
+        # For simplicity in this student project, we'll clear and re-add roles if provided
+        from models import DriveJob
+        role_titles = request.form.getlist('role_titles[]')
+        packages = request.form.getlist('packages[]')
+        
+        if role_titles:
+            # Clear old roles
+            DriveJob.query.filter_by(drive_id=drive_id).delete()
+            for role_title, package in zip(role_titles, packages):
+                if role_title and package:
+                    job = DriveJob(
+                        drive_id=drive_record.id,
+                        role_title=role_title,
+                        package=float(package)
+                    )
+                    db.session.add(job)
+        
+        db.session.commit()
+        flash('Drive updated successfully.', 'success')
+        return redirect(url_for('company.company_drives'))
+        
+    return render_template('company/edit_drive.html', drive=drive_record)
+
+# Route: Delete a placement drive
+@company_bp.route('/drive/delete/<int:drive_id>')
+@login_required
+@company_required
+def delete_drive(drive_id):
+    company_record = current_user.company_profile
+    drive_record = PlacementDrive.query.get_or_404(drive_id)
+    
+    if drive_record.company_id != company_record.id:
+        flash('Unauthorized.', 'danger')
+        return redirect(url_for('company.company_drives'))
+        
+    db.session.delete(drive_record)
+    db.session.commit()
+    flash('Drive deleted successfully.', 'success')
+    return redirect(url_for('company.company_drives'))
+
+# Route: Close a placement drive
+@company_bp.route('/drive/close/<int:drive_id>')
+@login_required
+@company_required
+def close_drive(drive_id):
+    company_record = current_user.company_profile
+    drive_record = PlacementDrive.query.get_or_404(drive_id)
+    
+    if drive_record.company_id != company_record.id:
+        flash('Unauthorized.', 'danger')
+        return redirect(url_for('company.company_drives'))
+        
+    drive_record.status = 'Closed'
+    db.session.commit()
+    flash('Drive closed successfully.', 'success')
+    return redirect(url_for('company.company_drives'))
 # Route: View all applications across all drives with optional status filter
 @company_bp.route('/applications/all')
 @company_bp.route('/applications/all/<string:status_filter>')

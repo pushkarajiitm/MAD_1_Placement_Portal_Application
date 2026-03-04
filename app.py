@@ -9,6 +9,7 @@ from functools import wraps
 from admin import admin_bp
 from company import company_bp
 from student import student_bp
+from api import api_bp
 
 app = Flask(__name__)
 
@@ -39,6 +40,7 @@ login_manager.login_view = 'login'
 app.register_blueprint(admin_bp)
 app.register_blueprint(company_bp)
 app.register_blueprint(student_bp)
+app.register_blueprint(api_bp)
 
 # Define how Flask-Login loads a user object from the session user_id
 @login_manager.user_loader
@@ -204,4 +206,4 @@ def logout():
 
 if __name__ == '__main__':
     # Start the Flask application development server on port 5001
-    app.run(debug=True, port=5004)
+    app.run(debug=True, port=5005)

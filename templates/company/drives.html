@@ -48,13 +48,22 @@
                         </td>
                         <td>{{ drive.application_deadline.strftime('%Y-%m-%d') }}</td>
                         <td class="pe-4 text-end">
-                            <!-- Only allow viewing applications if the drive is approved by admin -->
-                            {% if drive.status == 'Approved' %}
-                            <a href="{{ url_for('company.view_applications', drive_id=drive.id) }}"
-                                class="btn btn-sm btn-outline-primary fw-bold px-3">View Applications</a>
-                            {% else %}
-                            <button class="btn btn-sm btn-outline-secondary px-3" disabled>Waiting for Approval</button>
-                            {% endif %}
+                            <div class="btn-group">
+                                <!-- Only allow viewing applications if the drive is approved by admin -->
+                                {% if drive.status == 'Approved' %}
+                                <a href="{{ url_for('company.view_applications', drive_id=drive.id) }}"
+                                    class="btn btn-sm btn-outline-primary fw-bold">View Apps</a>
+                                <a href="{{ url_for('company.close_drive', drive_id=drive.id) }}"
+                                    class="btn btn-sm btn-outline-warning"
+                                    onclick="return confirm('Close this drive?')">Close</a>
+                                {% endif %}
+
+                                <a href="{{ url_for('company.edit_drive', drive_id=drive.id) }}"
+                                    class="btn btn-sm btn-outline-secondary">Edit</a>
+                                <a href="{{ url_for('company.delete_drive', drive_id=drive.id) }}"
+                                    class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('Delete this drive permanently?')">Delete</a>
+                            </div>
                         </td>
                     </tr>
                     {% else %}
