@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Company Profile{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm p-4">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="me-3">
+                        {% if company.logo_path %}
+                        <img src="{{ url_for('static', filename=company.logo_path) }}"
+                            class="rounded-circle border shadow-sm"
+                            style="width: 80px; height: 80px; object-fit: cover;">
+                        {% else %}
+                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center"
+                            style="width: 80px; height: 80px;">
+                            <span class="display-6 text-muted">🏢</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h2 class="fw-bold mb-1">Company Profile</h2>
+                        <p class="text-muted mb-0">Manage your public information</p>
+                    </div>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-bold small text-uppercase">Company Name</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ company.name }}"
+                            required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="hr_contact" class="form-label fw-bold small text-uppercase">HR Contact</label>
+                        <input type="text" class="form-control" id="hr_contact" name="hr_contact"
+                            value="{{ company.hr_contact }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="website" class="form-label fw-bold small text-uppercase">Website</label>
+                        <input type="url" class="form-control" id="website" name="website"
+                            value="{{ company.website }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="logo" class="form-label fw-bold small text-uppercase">Company Logo</label>
+                        <input type="file" class="form-control" id="logo" name="logo" accept="image/*">
+                        <div class="form-text">Update your company logo (JPG, PNG).</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="description" class="form-label fw-bold small text-uppercase">Description</label>
+                        <textarea class="form-control" id="description" name="description"
+                            rows="4">{{ company.description }}</textarea>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary py-2 fw-bold">Update Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

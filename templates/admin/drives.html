@@ -49,6 +49,8 @@
                             <a href="{{ url_for('admin.reject_drive', drive_id=drive.id) }}"
                                 class="btn btn-sm btn-outline-danger">Reject</a>
                             {% endif %}
+                            <a href="{{ url_for('admin.admin_applications', drive_id=drive.id) }}"
+                                class="btn btn-sm btn-outline-primary">Apps</a>
                             <a href="{{ url_for('admin.delete_drive', drive_id=drive.id) }}"
                                 class="btn btn-sm btn-outline-dark"
                                 onclick="return confirm('Delete this placement drive?')">Delete</a>

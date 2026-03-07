@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ drive.job_title }} | Details{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Back Button -->
+    <div class="mb-4">
+        <a href="{{ url_for('student.drives') }}"
+            class="btn btn-link text-decoration-none p-0 text-muted hover-primary">
+            <i class="bi bi-arrow-left me-1"></i> Back to All Drives
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <!-- Main Drive Info -->
+            <div class="card border-0 shadow-sm p-4 mb-4">
+                <div class="d-flex align-items-center mb-4">
+                    {% if drive.company.logo_path %}
+                    <div class="me-4 p-2 border rounded-4 bg-white shadow-sm">
+                        <img src="{{ url_for('static', filename=drive.company.logo_path) }}"
+                            alt="{{ drive.company.name }}" class="rounded-3"
+                            style="width: 80px; height: 80px; object-fit: contain;">
+                    </div>
+                    {% else %}
+                    <div class="bg-primary bg-opacity-10 text-primary p-4 rounded-4 me-4">
+                        <i class="bi bi-briefcase-fill fs-1"></i>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <h2 class="fw-bold mb-1 tracking-tight text-dark">{{ drive.job_title }}</h2>
+                        <h4 class="text-primary fw-semibold mb-0">{{ drive.company.name }}</h4>
+                    </div>
+                </div>
+
+                <hr class="my-4 opacity-25">
+
+                <div class="mb-5">
+                    <h5 class="fw-bold text-dark mb-3"><i class="bi bi-card-text me-2 text-primary"></i> Job Description
+                    </h5>
+                    <div class="text-muted lh-lg" style="white-space: pre-line;">
+                        {{ drive.job_description }}
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="p-4 bg-light rounded-4 h-100">
+                            <h6 class="text-uppercase fw-bold text-muted small mb-3 tracking-widest">Eligibility
+                                Criteria</h6>
+                            <div class="text-dark small lh-base" style="white-space: pre-line;">
+                                {{ drive.eligibility_criteria }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-4 bg-primary bg-opacity-10 rounded-4 h-100">
+                            <h6 class="text-uppercase fw-bold text-primary small mb-3 tracking-widest">Offered Roles
+                            </h6>
+                            {% for job in drive.offered_jobs %}
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-dark small">{{ job.role_title }}</span>
+                                <span
+                                    class="badge bg-white text-primary border border-primary-subtle rounded-pill small">{{
+                                    job.package }} LPA</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Sidebar Actions/Stats -->
+            <div class="card border-0 shadow-sm p-4 sticky-top" style="top: 2rem; z-index: 10;">
+                <div class="text-center mb-4">
+                    <div class="small text-muted text-uppercase fw-bold tracking-widest mb-1">Application Deadline</div>
+                    <h4 class="fw-bold text-danger mb-0">{{ drive.application_deadline.strftime('%d %b, %Y') }}</h4>
+                </div>
+
+                <div class="d-grid gap-3">
+                    {% if is_applied %}
+                    <button class="btn btn-secondary btn-lg py-3 fw-bold rounded-pill shadow" disabled>
+                        Applied <i class="bi bi-check-lg ms-2"></i>
+                    </button>
+                    {% else %}
+                    <a href="{{ url_for('student.apply', drive_id=drive.id) }}"
+                        class="btn btn-primary btn-lg py-3 fw-bold rounded-pill shadow transition-all hover-scale">
+                        Apply Now <i class="bi bi-send ms-2"></i>
+                    </a>
+                    {% endif %}
+                </div>
+
+                <div class="mt-4 p-3 bg-light rounded-3">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-info-circle text-primary me-2"></i>
+                        <span class="small fw-bold">Important Note</span>
+                    </div>
+                    <p class="small text-muted mb-0">Ensure your profile reflects your latest CGPA and resume before
+                        applying. You cannot withdraw once applied.</p>
+                </div>
+
+                <hr class="my-4">
+
+                <div class="text-center">
+                    <h6 class="small text-muted mb-2">Company Website</h6>
+                    {% if drive.company.website %}
+                    <a href="{{ drive.company.website }}" target="_blank"
+                        class="text-primary text-decoration-none fw-bold small">
+                        {{ drive.company.website }} <i class="bi bi-box-arrow-up-right ms-1"></i>
+                    </a>
+                    {% else %}
+                    <span class="text-muted small italic">Not provided</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .tracking-tight {
+        letter-spacing: -0.02em;
+    }
+
+    .tracking-widest {
+        letter-spacing: 0.15em;
+    }
+
+    .hover-primary:hover {
+        color: var(--bs-primary) !important;
+    }
+
+    .hover-scale:hover {
+        transform: scale(1.02);
+    }
+
+    .transition-all {
+        transition: all 0.2s ease-in-out;
+    }
+</style>
+{% endblock %}

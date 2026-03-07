@@ -78,6 +78,17 @@ def login():
         
         # Check if the user exists and the password matches
         if user_record and user_record.password == password_input:
+            # Check for company approval status if the user is a company
+            if user_record.role == 'company':
+                company_profile = user_record.company_profile
+                if not company_profile or company_profile.approval_status != 'Approved':
+                    status = company_profile.approval_status if company_profile else "Pending"
+                    if status == "Rejected":
+                        flash('Your registration was rejected. Please contact the administrator.', 'danger')
+                    else:
+                        flash('Your account is pending admin approval. Please check back later.', 'warning')
+                    return redirect(url_for('login'))
+
             # Create a session for the valid user
             login_user(user_record)
             

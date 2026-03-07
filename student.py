@@ -35,10 +35,14 @@ def dashboard():
     # Get all applications by this student
     my_applications = Application.query.filter_by(student_id=student_record.id).all()
     
+    # Get IDs of drives already applied to
+    applied_drive_ids = [app.drive_id for app in my_applications]
+    
     return render_template('student/dashboard.html', 
                            student=student_record, 
                            approved_drives=approved_drives, 
-                           applications=my_applications)
+                           applications=my_applications,
+                           applied_drive_ids=applied_drive_ids)
 
 # Route: View all currently approved placement drives
 @student_bp.route('/drives')
@@ -47,7 +51,12 @@ def dashboard():
 def drives():
     # Only show approved drives where deadline hasn't passed
     drive_records = PlacementDrive.query.filter_by(status='Approved').filter(PlacementDrive.application_deadline >= datetime.now()).all()
-    return render_template('student/drives.html', drives=drive_records)
+    
+    # Get IDs of drives already applied to
+    student_record = current_user.student_profile
+    applied_drive_ids = [app.drive_id for app in Application.query.filter_by(student_id=student_record.id).all()]
+    
+    return render_template('student/drives.html', drives=drive_records, applied_drive_ids=applied_drive_ids)
 
 # Route: Apply for a placement drive
 @student_bp.route('/apply/<int:drive_id>')
@@ -114,4 +123,16 @@ def profile():
 def history():
     student_record = current_user.student_profile
     all_applications = Application.query.filter_by(student_id=student_record.id).order_by(Application.application_date.desc()).all()
-    return render_template('student/history.html', applications=all_applications)
+    return render_template('student/history.html', applications=all_applications, student=student_record)
+# Route: View specific placement drive details
+@student_bp.route('/drive/<int:drive_id>')
+@login_required
+@student_required
+def drive_details(drive_id):
+    drive_record = PlacementDrive.query.get_or_404(drive_id)
+    
+    # Check if student has applied to this specific drive
+    student_record = current_user.student_profile
+    is_applied = Application.query.filter_by(student_id=student_record.id, drive_id=drive_id).first() is not None
+    
+    return render_template('student/drive_details.html', drive=drive_record, is_applied=is_applied)

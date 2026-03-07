@@ -11,6 +11,33 @@
         </div>
     </div>
 
+    {% if student.placement_status == 'Placed' %}
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm bg-success text-white">
+                <div class="card-body p-4 d-flex align-items-center">
+                    <div class="me-4 d-none d-md-block">
+                        <h1 class="display-3 mb-0">🏆</h1>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold mb-1">Congratulations! You are Placed</h4>
+                        <p class="mb-0 opacity-75">You have successfully secured a position at:</p>
+                        <h5 class="fw-bold mb-0 mt-1">{{ student.placed_company.name }} — {{ student.placed_role }} ({{
+                            student.package }} LPA)</h5>
+                    </div>
+                    <div class="ms-auto">
+                        {% if student.placed_company.logo_path %}
+                        <img src="{{ url_for('static', filename=student.placed_company.logo_path) }}"
+                            class="rounded-circle border border-white border-2 shadow-sm"
+                            style="width: 80px; height: 80px; object-fit: cover;">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="card border-0 shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive">

@@ -7,36 +7,48 @@
     <div class="row g-4 mb-4 text-center">
         <!-- Main Statistics -->
         <div class="col-md-3">
-            <div class="card border-0 shadow-sm h-100 p-3 border-top border-4 border-info">
-                <div class="card-body">
-                    <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Total Students</h6>
-                    <h1 class="display-6 fw-bold text-info mb-0">{{ total_students }}</h1>
+            <a href="{{ url_for('admin.admin_students') }}" class="text-decoration-none h-100 d-block">
+                <div
+                    class="card border-0 shadow-sm h-100 p-3 border-top border-4 border-info hover-active transition-all">
+                    <div class="card-body">
+                        <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Total Students</h6>
+                        <h1 class="display-6 fw-bold text-info mb-0">{{ total_students }}</h1>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-md-3">
-            <div class="card border-0 shadow-sm h-100 p-3 border-top border-4 border-primary">
-                <div class="card-body">
-                    <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Total Companies</h6>
-                    <h1 class="display-6 fw-bold text-primary mb-0">{{ total_companies }}</h1>
+            <a href="{{ url_for('admin.admin_companies') }}" class="text-decoration-none h-100 d-block">
+                <div
+                    class="card border-0 shadow-sm h-100 p-3 border-top border-4 border-primary hover-active transition-all">
+                    <div class="card-body">
+                        <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Total Companies</h6>
+                        <h1 class="display-6 fw-bold text-primary mb-0">{{ total_companies }}</h1>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-md-3">
-            <div class="card border-0 shadow-sm h-100 p-3 border-top border-4 border-success">
-                <div class="card-body">
-                    <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Total Drives</h6>
-                    <h1 class="display-6 fw-bold text-success mb-0">{{ total_drives }}</h1>
+            <a href="{{ url_for('admin.admin_drives') }}" class="text-decoration-none h-100 d-block">
+                <div
+                    class="card border-0 shadow-sm h-100 p-3 border-top border-4 border-success hover-active transition-all">
+                    <div class="card-body">
+                        <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Total Drives</h6>
+                        <h1 class="display-6 fw-bold text-success mb-0">{{ total_drives }}</h1>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-md-3">
-            <div class="card border-0 shadow-sm h-100 p-3 border-top border-4 border-dark">
-                <div class="card-body">
-                    <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Applications</h6>
-                    <h1 class="display-6 fw-bold text-dark mb-0">{{ total_applications }}</h1>
+            <a href="{{ url_for('admin.admin_applications') }}" class="text-decoration-none h-100 d-block">
+                <div
+                    class="card border-0 shadow-sm h-100 p-3 border-top border-4 border-dark hover-active transition-all">
+                    <div class="card-body">
+                        <h6 class="text-muted fw-bold mb-2 uppercase-tracking">Applications</h6>
+                        <h1 class="display-6 fw-bold text-dark mb-0">{{ total_applications }}</h1>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 
@@ -107,10 +119,11 @@
                 <div class="card-body">
                     <p>Welcome, Admin. Here you can oversee the recruitment activities, manage user accounts, and
                         approve corporate requests.</p>
-                    <div class="d-flex gap-2">
+                    <div class="d-flex gap-2 text-nowrap flex-wrap">
                         <a href="{{ url_for('admin.admin_companies') }}" class="btn btn-primary">Companies List</a>
                         <a href="{{ url_for('admin.admin_students') }}" class="btn btn-secondary">Students List</a>
                         <a href="{{ url_for('admin.admin_drives') }}" class="btn btn-success">Drives List</a>
+                        <a href="{{ url_for('admin.admin_applications') }}" class="btn btn-dark">Applications List</a>
                     </div>
                 </div>
             </div>

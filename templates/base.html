@@ -42,6 +42,9 @@
                         <a class="nav-link px-2" href="{{ url_for('admin.admin_drives') }}">Drives</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link px-2" href="{{ url_for('admin.admin_applications') }}">Applications</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link px-2" href="{{ url_for('admin.placement_history') }}">History</a>
                     </li>
                     {% elif current_user.role == 'company' %}
@@ -50,6 +53,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link px-2" href="{{ url_for('company.company_drives') }}">My Drives</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="{{ url_for('company.company_profile') }}">Profile</a>
                     </li>
                     {% elif current_user.role == 'student' %}
                     <li class="nav-item">

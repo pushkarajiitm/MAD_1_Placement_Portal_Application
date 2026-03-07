@@ -35,18 +35,58 @@ def company_dashboard():
     # Aggregate statistics for the company dashboard
     count_my_drives = PlacementDrive.query.filter_by(company_id=company_record.id).count()
     
-    # Get all the applications for all the drives this company has created
+    # Get all the drives this company has created
     my_drives = PlacementDrive.query.filter_by(company_id=company_record.id).all()
     drive_ids = [drive.id for drive in my_drives]
+    
+    # Enrich drives with applicant counts (for the dashboard table)
+    for drive in my_drives:
+        drive.applicant_count = Application.query.filter_by(drive_id=drive.id).count()
+
     count_total_applications = Application.query.filter(Application.drive_id.in_(drive_ids)).count() if drive_ids else 0
     count_shortlisted = Application.query.filter(Application.drive_id.in_(drive_ids), Application.status == 'Shortlisted').count() if drive_ids else 0
     count_selected = Application.query.filter(Application.drive_id.in_(drive_ids), Application.status == 'Selected').count() if drive_ids else 0
     
     return render_template('company/dashboard.html', 
+                          company=company_record,
+                          my_drives=my_drives,
                           my_drives_count=count_my_drives, 
                           total_applications=count_total_applications,
                           shortlisted_count=count_shortlisted,
                           selected_count=count_selected)
+
+# Route: Company Profile management
+@company_bp.route('/profile', methods=['GET', 'POST'])
+@login_required
+@company_required
+def company_profile():
+    company_record = current_user.company_profile
+    if not company_record:
+        flash('Company profile not found.', 'danger')
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        # Retrieve updated profile details
+        company_record.name = request.form.get('name')
+        company_record.hr_contact = request.form.get('hr_contact')
+        company_record.website = request.form.get('website')
+        company_record.description = request.form.get('description')
+        
+        # Handle logo update
+        logo_file = request.files.get('logo')
+        if logo_file and logo_file.filename != '':
+            from werkzeug.utils import secure_filename
+            from flask import current_app
+            import os
+            secure_name = secure_filename(f"{current_user.username}_logo_{logo_file.filename}")
+            logo_file.save(os.path.join(current_app.config['LOGO_UPLOAD_FOLDER'], secure_name))
+            company_record.logo_path = f"uploads/logos/{secure_name}"
+
+        db.session.commit()
+        flash('Company profile updated successfully.', 'success')
+        return redirect(url_for('company.company_profile'))
+
+    return render_template('company/profile.html', company=company_record)
 
 # Route: View and Create placement drives
 @company_bp.route('/drives', methods=['GET', 'POST'])
@@ -177,9 +217,14 @@ def edit_drive(drive_id):
     company_record = current_user.company_profile
     drive_record = PlacementDrive.query.get_or_404(drive_id)
     
-    if drive_record.company_id != company_record.id:
+    if not drive_record or drive_record.company_id != company_record.id:
         flash('Unauthorized.', 'danger')
         return redirect(url_for('company.company_drives'))
+    
+    # Ensure company is approved to edit
+    if company_record.approval_status != 'Approved':
+        flash('Account pending approval.', 'warning')
+        return redirect(url_for('company.company_dashboard'))
         
     if request.method == 'POST':
         drive_record.job_title = request.form.get('job_title')
@@ -220,9 +265,14 @@ def delete_drive(drive_id):
     company_record = current_user.company_profile
     drive_record = PlacementDrive.query.get_or_404(drive_id)
     
-    if drive_record.company_id != company_record.id:
+    if not drive_record or drive_record.company_id != company_record.id:
         flash('Unauthorized.', 'danger')
         return redirect(url_for('company.company_drives'))
+
+    # Ensure company is approved to delete
+    if company_record.approval_status != 'Approved':
+        flash('Account pending approval.', 'warning')
+        return redirect(url_for('company.company_dashboard'))
         
     db.session.delete(drive_record)
     db.session.commit()
@@ -237,9 +287,14 @@ def close_drive(drive_id):
     company_record = current_user.company_profile
     drive_record = PlacementDrive.query.get_or_404(drive_id)
     
-    if drive_record.company_id != company_record.id:
+    if not drive_record or drive_record.company_id != company_record.id:
         flash('Unauthorized.', 'danger')
         return redirect(url_for('company.company_drives'))
+    
+    # Ensure company is approved to close
+    if company_record.approval_status != 'Approved':
+        flash('Account pending approval.', 'warning')
+        return redirect(url_for('company.company_dashboard'))
         
     drive_record.status = 'Closed'
     db.session.commit()

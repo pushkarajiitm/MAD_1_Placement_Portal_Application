@@ -105,6 +105,71 @@
         </div>
     </div>
 </div>
+<div class="row mt-5">
+    <div class="col-md-10 mx-auto">
+        <div class="card border-0 shadow-sm border-start border-4 border-success">
+            <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0 text-success">Live Placement Drives</h5>
+                <a href="{{ url_for('student.drives') }}" class="btn btn-sm btn-outline-success rounded-pill">View
+                    All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Company</th>
+                                <th>Job Title</th>
+                                <th>Eligibility</th>
+                                <th>Deadline</th>
+                                <th class="text-end pe-4">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for drive in approved_drives[:5] %}
+                            <tr>
+                                <td class="ps-4 fw-bold">
+                                    <div class="d-flex align-items-center">
+                                        {% if drive.company.logo_path %}
+                                        <img src="{{ url_for('static', filename=drive.company.logo_path) }}"
+                                            class="rounded-circle me-2 border shadow-sm"
+                                            style="width: 24px; height: 24px; object-fit: cover;">
+                                        {% endif %}
+                                        {{ drive.company.name }}
+                                    </div>
+                                </td>
+                                <td>{{ drive.job_title }}</td>
+                                <td><span class="small text-muted">{{ drive.eligibility_criteria|truncate(30) }}</span>
+                                </td>
+                                <td>{{ drive.application_deadline.strftime('%d %b, %Y') }}</td>
+                                <td class="text-end pe-4">
+                                    <div class="btn-group">
+                                        <a href="{{ url_for('student.drive_details', drive_id=drive.id) }}"
+                                            class="btn btn-sm btn-outline-primary rounded-pill px-3 me-2">View</a>
+                                        {% if drive.id in applied_drive_ids %}
+                                        <button
+                                            class="btn btn-sm btn-secondary rounded-pill px-3 fw-bold decoration-none"
+                                            disabled>Applied</button>
+                                        {% else %}
+                                        <a href="{{ url_for('student.apply', drive_id=drive.id) }}"
+                                            class="btn btn-sm btn-success rounded-pill px-3 fw-bold">Apply Now</a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted">No live drives available at the
+                                    moment.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="row mt-4">
     <div class="col-12 text-center">

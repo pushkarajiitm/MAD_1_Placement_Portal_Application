@@ -275,3 +275,30 @@ def placement_history():
     return render_template('admin/placement_history.html', 
                            applications=placed_applications, 
                            avg_package=round(avg_package, 2))
+
+# Route: View all student applications
+@admin_bp.route('/applications')
+@login_required
+@admin_required
+def admin_applications():
+    search_query = request.args.get('search', '')
+    drive_id = request.args.get('drive_id')
+    
+    query = Application.query.join(Student).join(PlacementDrive).join(Company)
+    
+    if drive_id:
+        query = query.filter(Application.drive_id == int(drive_id))
+    
+    if search_query:
+        query = query.filter(
+            (Student.full_name.ilike(f'%{search_query}%')) | 
+            (PlacementDrive.job_title.ilike(f'%{search_query}%')) |
+            (Company.name.ilike(f'%{search_query}%'))
+        )
+        
+    application_records = query.order_by(Application.application_date.desc()).all()
+    
+    return render_template('admin/applications.html', 
+                           applications=application_records, 
+                           search=search_query,
+                           drive_id=drive_id)
