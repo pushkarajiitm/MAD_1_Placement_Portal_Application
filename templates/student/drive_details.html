@@ -18,10 +18,10 @@
             <div class="card border-0 shadow-sm p-4 mb-4">
                 <div class="d-flex align-items-center mb-4">
                     {% if drive.company.logo_path %}
-                    <div class="me-4 p-2 border rounded-4 bg-white shadow-sm">
+                    <div class="me-4 logo-container rounded-4 shadow-sm"
+                        style="width: 100px; height: 100px; padding: 10px;">
                         <img src="{{ url_for('static', filename=drive.company.logo_path) }}"
-                            alt="{{ drive.company.name }}" class="rounded-3"
-                            style="width: 80px; height: 80px; object-fit: contain;">
+                            alt="{{ drive.company.name }}" class="company-logo">
                     </div>
                     {% else %}
                     <div class="bg-primary bg-opacity-10 text-primary p-4 rounded-4 me-4">

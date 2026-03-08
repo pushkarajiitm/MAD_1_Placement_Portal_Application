@@ -28,9 +28,11 @@
                         {% if student.placed_company %}
                         <div class="d-flex align-items-center">
                             {% if student.placed_company.logo_path %}
-                            <img src="{{ url_for('static', filename=student.placed_company.logo_path) }}"
-                                class="rounded-circle me-2 border shadow-sm"
-                                style="width: 32px; height: 32px; object-fit: cover;">
+                            <div class="logo-container rounded-2 me-2 border shadow-sm"
+                                style="width: 32px; height: 32px; padding: 2px;">
+                                <img src="{{ url_for('static', filename=student.placed_company.logo_path) }}"
+                                    class="company-logo">
+                            </div>
                             {% endif %}
                             <span class="text-primary fw-bold">{{ student.placed_company.name }}</span>
                         </div>

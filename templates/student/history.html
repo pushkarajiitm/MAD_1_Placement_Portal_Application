@@ -27,9 +27,11 @@
                     </div>
                     <div class="ms-auto">
                         {% if student.placed_company.logo_path %}
-                        <img src="{{ url_for('static', filename=student.placed_company.logo_path) }}"
-                            class="rounded-circle border border-white border-2 shadow-sm"
-                            style="width: 80px; height: 80px; object-fit: cover;">
+                        <div class="logo-container rounded-circle border border-white border-2 shadow-sm"
+                            style="width: 80px; height: 80px; padding: 8px;">
+                            <img src="{{ url_for('static', filename=student.placed_company.logo_path) }}"
+                                class="company-logo">
+                        </div>
                         {% endif %}
                     </div>
                 </div>
@@ -57,9 +59,11 @@
                             <td class="fw-bold">
                                 <div class="d-flex align-items-center">
                                     {% if app.drive.company.logo_path %}
-                                    <img src="{{ url_for('static', filename=app.drive.company.logo_path) }}"
-                                        class="rounded-circle me-2 border shadow-sm"
-                                        style="width: 24px; height: 24px; object-fit: cover;">
+                                    <div class="logo-container rounded-circle me-2 border shadow-sm"
+                                        style="width: 24px; height: 24px; padding: 2px;">
+                                        <img src="{{ url_for('static', filename=app.drive.company.logo_path) }}"
+                                            class="company-logo">
+                                    </div>
                                     {% endif %}
                                     {{ app.drive.company.name }}
                                 </div>

@@ -25,10 +25,10 @@
                             <div class="d-flex justify-content-between align-items-start mb-4">
                                 <div class="d-flex align-items-center">
                                     {% if drive.company.logo_path %}
-                                    <div class="me-3 p-1 border rounded bg-white shadow-sm">
+                                    <div class="me-3 logo-container rounded shadow-sm"
+                                        style="width: 64px; height: 64px; padding: 5px;">
                                         <img src="{{ url_for('static', filename=drive.company.logo_path) }}"
-                                            alt="{{ drive.company.name }}" class="rounded"
-                                            style="width: 64px; height: 64px; object-fit: contain;">
+                                            alt="{{ drive.company.name }}" class="company-logo">
                                     </div>
                                     {% else %}
                                     <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-3 me-3">

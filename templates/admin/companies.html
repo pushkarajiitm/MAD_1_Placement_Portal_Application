@@ -30,9 +30,11 @@
                     <td>
                         <div class="d-flex align-items-center">
                             {% if company.logo_path %}
-                            <img src="{{ url_for('static', filename=company.logo_path) }}" alt="{{ company.name }} logo"
-                                class="rounded-circle me-3 shadow-sm border"
-                                style="width: 40px; height: 40px; object-fit: cover;">
+                            <div class="logo-container rounded-3 me-3 shadow-sm border"
+                                style="width: 48px; height: 48px; padding: 4px;">
+                                <img src="{{ url_for('static', filename=company.logo_path) }}"
+                                    alt="{{ company.name }} logo" class="company-logo">
+                            </div>
                             {% else %}
                             <div class="rounded-circle me-3 bg-light border d-flex align-items-center justify-content-center text-muted shadow-sm"
                                 style="width: 40px; height: 40px; font-size: 12px;">No Logo</div>

@@ -72,8 +72,10 @@
         <div class="card border-0 shadow-sm h-100 p-4">
             <div class="d-flex align-items-center mb-3">
                 {% if company.logo_path %}
-                <img src="{{ url_for('static', filename=company.logo_path) }}"
-                    class="rounded-circle me-3 border shadow-sm" style="width: 60px; height: 60px; object-fit: cover;">
+                <div class="logo-container rounded-3 me-3 border shadow-sm"
+                    style="width: 60px; height: 60px; padding: 5px;">
+                    <img src="{{ url_for('static', filename=company.logo_path) }}" class="company-logo">
+                </div>
                 {% endif %}
                 <h4 class="fw-bold mb-0 text-truncate">{{ company.name }}</h4>
             </div>

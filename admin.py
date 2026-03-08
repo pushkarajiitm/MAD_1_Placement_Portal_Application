@@ -168,6 +168,20 @@ def mark_as_placed(student_id):
             
     return redirect(url_for('admin.admin_students'))
 
+# Route: Reset Student Placement
+@admin_bp.route('/student/<int:student_id>/reset-placement')
+@login_required
+@admin_required
+def reset_placement(student_id):
+    student_record = Student.query.get(student_id)
+    if student_record:
+        student_record.placement_status = 'Unplaced'
+        student_record.placed_company_id = None
+        student_record.package = None
+        student_record.placed_role = None
+        db.session.commit()
+    return redirect(url_for('admin.admin_students'))
+
 # Route: Blacklist Student
 @admin_bp.route('/student/blacklist/<int:student_id>')
 @login_required
