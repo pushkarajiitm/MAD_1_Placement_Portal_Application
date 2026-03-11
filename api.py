@@ -1,3 +1,4 @@
+"""JSON API endpoints."""
 from flask import Blueprint, jsonify
 from models import User, Student, Company, PlacementDrive, Application
 

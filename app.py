@@ -1,3 +1,4 @@
+"""Main application setup and core routes."""
 from flask import Flask, render_template, request, redirect, url_for, flash
 from models import db, User, Student, Company, PlacementDrive, Application
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -216,5 +217,5 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    # Start the Flask application development server on port 5001
+    # Start the Flask application development server on port 5005
     app.run(debug=True, port=5005)

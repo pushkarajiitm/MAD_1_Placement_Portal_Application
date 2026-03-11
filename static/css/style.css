@@ -1,4 +1,4 @@
-/* Vibrant Student Project - CSS Override */
+/* Placement Portal - Main Stylesheet */
 :root {
     --primary: #007bff;
     --secondary: #6c757d;
@@ -179,6 +179,7 @@ body {
     color: #087990;
     border: 1px solid rgba(13, 202, 240, 0.2);
 }
+
 /* Company Logo Styling */
 .logo-container {
     display: flex;

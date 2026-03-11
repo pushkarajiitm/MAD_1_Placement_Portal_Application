@@ -1,11 +1,12 @@
+"""Database models for the placement portal."""
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_login import UserMixin
 
 db = SQLAlchemy()
 
-# User table for login and roles
 class User(db.Model, UserMixin):
+    """User account model for login and role management."""
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False) # Store passwords as plain text
@@ -17,8 +18,8 @@ class User(db.Model, UserMixin):
     company_profile = db.relationship('Company', backref='user', uselist=False)
     student_profile = db.relationship('Student', backref='user', uselist=False)
 
-# Company details table
 class Company(db.Model):
+    """Company details and approval status."""
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
@@ -32,8 +33,8 @@ class Company(db.Model):
     # link to company's drives
     drives = db.relationship('PlacementDrive', backref='company', lazy=True)
 
-# Student details table
 class Student(db.Model):
+    """Student profile and placement details."""
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     full_name = db.Column(db.String(100), nullable=False)
@@ -55,8 +56,8 @@ class Student(db.Model):
     # link to student's applications
     applications = db.relationship('Application', backref='student', lazy=True)
 
-# Placement drive table (job postings)
 class PlacementDrive(db.Model):
+    """Job posting created by a company."""
     id = db.Column(db.Integer, primary_key=True)
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
     job_title = db.Column(db.String(100), nullable=False)
@@ -71,15 +72,15 @@ class PlacementDrive(db.Model):
     # link to specific jobs offered by this drive
     offered_jobs = db.relationship('DriveJob', backref='drive', lazy=True, cascade="all, delete-orphan")
 
-# Specific jobs/roles within a placement drive
 class DriveJob(db.Model):
+    """Specific roles offered in a placement drive."""
     id = db.Column(db.Integer, primary_key=True)
     drive_id = db.Column(db.Integer, db.ForeignKey('placement_drive.id'), nullable=False)
     role_title = db.Column(db.String(100), nullable=False)
     package = db.Column(db.Float, nullable=False) # LPA
 
-# Application table (student applying for a drive)
 class Application(db.Model):
+    """Student's application to a drive and its status."""
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
     drive_id = db.Column(db.Integer, db.ForeignKey('placement_drive.id'), nullable=False)

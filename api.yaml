@@ -1,0 +1,128 @@
+openapi: 3.0.0
+info:
+  title: MAD 1 Placement Portal API
+  description: API endpoints for retrieving data regarding students, companies, placement drives, and applications within the Placement Portal.
+  version: 1.0.0
+servers:
+  - url: /api
+    description: Base URL for all API routes
+paths:
+  /students:
+    get:
+      summary: Get all students
+      description: Retrieves a list of all registered students along with their core academic and placement details.
+      responses:
+        '200':
+          description: A JSON array of student objects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    full_name:
+                      type: string
+                      example: "John Doe"
+                    department:
+                      type: string
+                      example: "Computer Science"
+                    cgpa:
+                      type: number
+                      format: float
+                      example: 8.5
+                    placement_status:
+                      type: string
+                      example: "Placed"
+  /companies:
+    get:
+      summary: Get all companies
+      description: Returns a list of all registered recruiting organizations.
+      responses:
+        '200':
+          description: A JSON array of company objects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    name:
+                      type: string
+                      example: "Tech Corp"
+                    approval_status:
+                      type: string
+                      example: "Approved"
+                    is_blacklisted:
+                      type: boolean
+                      example: false
+  /drives:
+    get:
+      summary: Get all placement drives
+      description: Fetches all placement drives created by companies across the platform.
+      responses:
+        '200':
+          description: A JSON array of placement drive objects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    company:
+                      type: string
+                      example: "Tech Corp"
+                    job_title:
+                      type: string
+                      example: "Software Development Engineer"
+                    status:
+                      type: string
+                      example: "Approved"
+                    deadline:
+                      type: string
+                      format: date
+                      example: "2024-12-31"
+  /applications:
+    get:
+      summary: Get all applications
+      description: Retrieves all student applications submitted for various placement drives.
+      responses:
+        '200':
+          description: A JSON array of application objects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    student:
+                      type: string
+                      example: "John Doe"
+                    drive:
+                      type: string
+                      example: "Software Development Engineer"
+                    company:
+                      type: string
+                      example: "Tech Corp"
+                    status:
+                      type: string
+                      example: "Selected"
+                    date:
+                      type: string
+                      format: date
+                      example: "2024-10-15"

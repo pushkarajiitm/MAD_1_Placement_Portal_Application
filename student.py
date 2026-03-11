@@ -1,3 +1,4 @@
+"""Student-facing routes and logic."""
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
 from flask_login import login_required, current_user
 from models import db, Student, Company, PlacementDrive, Application

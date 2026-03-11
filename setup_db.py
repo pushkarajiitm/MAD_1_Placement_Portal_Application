@@ -1,3 +1,4 @@
+"""Initialize the database and create a default admin user."""
 from flask import Flask
 from models import db, User
 import os
